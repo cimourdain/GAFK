@@ -2,15 +2,15 @@
 
 GAFK is a simple PHP framework i wrote for education purpose while learning OOP.
 
-##Features
+## Features
 
  * PHP Frawework (OOP)
- * URL rewrite router (regular expressions)
+ * URL rewrite router (regular expressions, folders and subdomains management)
  * Powerful templating management with [Tiwg](https://twig.sensiolabs.org/)
  * Errors and exceptions handling 
  * [TO DO] Backend management (backend creation automation)
 
-##Requirements
+## Requirements
 
  * PHP > 7.0
  * Twig > 2.0
@@ -25,7 +25,7 @@ Download master banch and unzip it on your computer
 
 GAFK is using TWIG as a template renderer, [install Tiwg](https://twig.sensiolabs.org/) with composer in the "lib/vendor/" folder.
 
-##Install
+## Install
 
 ### Local install
 
@@ -57,7 +57,7 @@ Example for Apache
 
 ```
 
-##Basic usage
+## Basic usage
 
 ### Define App setup
 
@@ -87,7 +87,7 @@ Example
 </routes>
 ```
 
-Note: URLPattern allow you to use regular expressions (see section below)
+Note  : URLPattern allow you to use regular expressions (to do in wiki)
 
 
 #### Create your module twig template
@@ -105,6 +105,7 @@ Then, in the MyWebsitePage folder create a file with your twig template (see Twi
 In the twig template, you can use the {{base_dir}} to access site root. This variable is useful to access css files (created in the /Web/css/ folder).
 
 Example of access to css files in your twig template:
+
 ```
 <link rel="stylesheet" href="{{ base_dir }}/css/styles.css" media="all">
 ```
@@ -118,7 +119,7 @@ In the app folder create the following folder structure:
 
 ```
 
-Then, in the Frontend folder create a php file with the following :
+Then, in the Frontend folder create a php file named MyWebsitePageFrontendManager.php with the following :
 
 ```
 <?php
@@ -137,6 +138,9 @@ class MyWebsitePageFrontendManager extends \GAFK\Manager
 ?>
 
 ```
+
+note: your php file name, namespace and class name must be identical (and have to start with a capial letter).
+
 #### That's it
 
 Conntect to your website homepage, you
