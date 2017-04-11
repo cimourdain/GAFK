@@ -8,12 +8,7 @@ class HomepageFrontendManager extends \GAFK\Manager
 	public function executeIndex($vars)
 	{
 		$this -> setTemplate("./HomePage/HomePage.twig");
-		$this -> setTemplateVars(["Page_Title" => "Welcome on my page"]);
-	}
-
-	public function executeError()
-	{
-		echo 'Homepage Error';
+		#$this -> setTemplateVars(["Page_Title" => "Welcome on my page"]);
 	}
 
 

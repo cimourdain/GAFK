@@ -73,8 +73,6 @@ abstract class Manager
 		$actionMethod = $this -> action;
 		$this -> $actionMethod($this -> url_get_vars);
 	}
-
-	abstract public function executeError();
 	
 	public function setTemplate($template)
 	{
