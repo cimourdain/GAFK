@@ -15,7 +15,7 @@ GAFK is a simple PHP framework i wrote for education purpose while learning OOP.
  * PHP > 7.0
  * Twig > 2.0
 
-##Download
+## Download
 
 ### GAFK
 
@@ -23,7 +23,13 @@ Download master banch and unzip it on your computer
 
 ### TWIG
 
-GAFK is using TWIG as a template renderer, [install Tiwg](https://twig.sensiolabs.org/) with composer in the "lib/vendor/" folder.
+GAFK is using TWIG as a template renderer, [install Tiwg](https://twig.sensiolabs.org/) with composer in the "lib/vendor/" folder. 
+
+Composer autoload.php file must be in the following folder
+
+```
+lib/vendor/autoload.php
+```
 
 ## Install
 
