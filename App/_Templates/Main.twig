@@ -5,19 +5,27 @@
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>{{Page_title}}</title>
-    <link rel="stylesheet" href="{{ base_dir }}/css/styles.css" media="all">
+    {% block header_css_includes %}
+      <link rel="stylesheet" href="{{ base_dir }}/css/styles.css" media="all">
+    {% endblock %}
+    {% block header_js_includes %}{% endblock %}
   </head>
   <body>
-  
-  <header>{% block header %}Header{% endblock %}</header>
+    <header>
+         {% block header %}
+          <h1>Responsive Layout using Flexbox</h1>
+         {% endblock %}
+    </header>
 
-  <section class="flexbox">
-    {% block left_nav %}<aside class="left">Left Aside</aside>{% endblock %}
-    {% block content %}<article class="center">Center Section</article>{% endblock %}
-    {% block right_nav %}<aside class="right">Right Aside</aside>{% endblock %}
-  </section>
+    <div id="main">
+        {% block left_nav %}<nav>nav</nav>{% endblock %}
+        {% block right_nav %}<aside>aside</aside>{% endblock %}
+        
+        <section>{% block content %}{% endblock %}</section>
 
-  {% block footer %}<footer>Footer</footer>{% endblock %}
-
+    </div>
+    {% block footer %}<footer>Default Footer</footer>{% endblock %}
+    {% block footer_js_includes %}{% endblock %}
+    {% block footer_js_scripts %}{% endblock %}
   </body>
 </html>

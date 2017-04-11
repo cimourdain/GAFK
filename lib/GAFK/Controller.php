@@ -35,7 +35,7 @@ class Controller
 		//Initiate HTTPRequest
 		$this -> setHTTPRequest();
 
-		//initiate Router
+		/*//initiate Router
 		$this -> setRouter();
 
 		//Get Route from Router
@@ -44,9 +44,9 @@ class Controller
 		//get manager from Route
 		$this -> setManager();
 
-		$this -> manager -> execute();
+		$this -> manager -> execute();*/
 
-		$this -> renderOutput();
+
 
  	}
 
@@ -123,12 +123,19 @@ class Controller
  		$module = $this -> getRoute() -> getModule();
  		$type = $this -> getRoute() -> getType();
  		//load Manager Class
- 		print_r('Load Folder: '.__DIR__.'/../../App/'.$module.'/'.$type.'/ => as '.$module.'<br />');
+ 		#print_r('Load Folder: '.__DIR__.'/../../App/'.$module.'/'.$type.'/ => as '.$module.'<br />');
 		$this -> loader -> addNamespace($module, __DIR__.'/../../App/'.$module.'/'.$type.'/');
 
-		print_r('Load Class: '.$module.'\\'.$this -> route -> getManagerFileName($module).'<br />');
+		#print_r('Load Class: '.$module.'\\'.$this -> route -> getManagerFileName($module).'<br />');
  		$module_class = $module.'\\'.$this -> route -> getManagerFileName($module);
- 		$this -> manager = new $module_class($module, $type, $this -> route -> getAction(), $this -> route -> getRoutevars());
+ 		if (class_exists($module_class)) {
+ 			$this -> manager = new $module_class($module, $type, $this -> route -> getAction(), $this -> route -> getRoutevars());
+ 		}else{
+ 			$this -> loader -> addNamespace('_Error', __DIR__.'/../../App/_Error/Frontend/');
+ 			$this -> manager = new \_Error\_ErrorFrontendManager($module, $type, $this -> route -> getAction(), $this -> route -> getRoutevars());
+ 		}
+
+ 		
 
  	}
 
@@ -154,7 +161,8 @@ class Controller
  	{
  		$template_vars = $this -> manager -> getTemplateVars();
  		$template_vars['base_dir'] = 'http://'.$this -> app -> getHost();
- 		print_r(var_dump($template_vars));
+ 		//print_r('Template: '.$this -> manager -> getTemplate());
+ 		#print_r(var_dump($template_vars));
  		echo $this -> renderer -> render($this -> manager -> getTemplate(), $template_vars);
 
  	}

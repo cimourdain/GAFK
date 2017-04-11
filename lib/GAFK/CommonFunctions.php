@@ -32,7 +32,14 @@ trait CommonFunctions
 		    $a = array_slice($a, 0, $size); 
 		    $b = array_slice($b, 0, $size); 
 		    return array_combine($a, $b); 
-		} 
+		}
+
+		public function array_combine_to_first_array_size($a, $b)
+		{
+		    $size = count($a);
+		    $b = array_pad($b, $size, "");
+		    return array_combine($a, $b); 
+		}
 }
 
 ?>

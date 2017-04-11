@@ -116,7 +116,7 @@ class Router{
 				{
 					if(preg_match('`^'.$route['URLPattern'].'\/?$`', $url, $matches))
 					{
-						if(isset($route['vars']) && !empty($route['vars']) && count($matches) > 1)
+						if(isset($route['vars']) && !empty($route['vars']))
 						{
 							$this -> route_vars = $this -> matchUrlVars(explode(',', str_replace(' ', '', $route['vars'])), $matches);
 						}else
@@ -134,7 +134,7 @@ class Router{
 	private function matchUrlVars($vars, $matches)
 	{
 		array_shift($matches);
-		return $this -> array_combine_diff_sizes($vars, $matches);
+		return $this -> array_combine_to_first_array_size($vars, $matches);
 	}
 
 

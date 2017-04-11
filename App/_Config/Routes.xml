@@ -13,7 +13,8 @@
 	</backend>
 	<frontend>
 		<subdomain value="www,">
-			<route URLPattern="/(en|fr|es)?" vars="lang" module="Homepage" action="index"/>
+			<route URLPattern="/" module="Homepage" action="index"/>
+			<route URLPattern="/SiteJSON/?(en|fr|es)?" vars="lang" module="SiteJSON" action="index"/>
 			<route URLPattern="/blog" module="blog" action="index" />
 		</subdomain>
 		<subdomain value="forum">

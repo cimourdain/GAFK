@@ -130,7 +130,7 @@ class Route
 	*
 	*@return : void
 	**********************************/
-	private function setRouteToError()
+	public function setRouteToError()
 	{
 		$this -> module = '_Error';
 		$this -> type = 'Frontend';
