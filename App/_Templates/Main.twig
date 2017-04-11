@@ -1,0 +1,23 @@
+<!doctype html>
+<html class="no-js" lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{{Page_title}}</title>
+    <link rel="stylesheet" href="{{ base_dir }}/css/styles.css" media="all">
+  </head>
+  <body>
+  
+  <header>{% block header %}Header{% endblock %}</header>
+
+  <section class="flexbox">
+    {% block left_nav %}<aside class="left">Left Aside</aside>{% endblock %}
+    {% block content %}<article class="center">Center Section</article>{% endblock %}
+    {% block right_nav %}<aside class="right">Right Aside</aside>{% endblock %}
+  </section>
+
+  {% block footer %}<footer>Footer</footer>{% endblock %}
+
+  </body>
+</html>

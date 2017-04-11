@@ -1,0 +1,46 @@
+header, footer {
+  background-color:hsl(200,50%,50%);
+  height:6em;
+}
+
+section {
+  height:24em;
+}
+
+article {
+  background-color:hsl(200,80%,80%);
+}
+
+aside {
+  background-color:hsl(200,90%,90%);
+  flex:1;
+}
+
+.flexbox {
+  display:flex;
+  flex-flow:row;
+  -webkit-flex-flow:row;
+}
+
+.center {
+  flex:4;
+}
+
+@media (max-width:600px) {
+  .flexbox {
+    flex-flow:column;
+    -webkit-flex-flow:column;
+  }
+
+  aside.left {
+    order:2;
+  }
+
+  aside.right {
+    order:3;
+  }
+
+  header, footer {
+    height:2em;
+  }
+}
