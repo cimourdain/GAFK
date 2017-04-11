@@ -1,3 +1,2 @@
 /lib/vendor/*
-/lib/vendor/composer.json
-/lib/vendor/composer.lock
+/lib/vendor/composer*
