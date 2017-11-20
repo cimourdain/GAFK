@@ -2,7 +2,7 @@
 
 namespace core;
 use PDO;
-class PDOManager{
+abstract class PDOManager{
 
     protected $_pdo = null;
     protected $_logger = null;
