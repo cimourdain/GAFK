@@ -3,8 +3,8 @@
 namespace App;
 
 class Config{
-    const WEBSITE_ADDRESS = 'http://ca/';
-    const SCRIPT_FOLDER = 'php_rush/';
+    const WEBSITE_ADDRESS = 'http://localhost/';
+    const SCRIPT_FOLDER = 'install_folder/';
     const BASE_URL = self::WEBSITE_ADDRESS.self::SCRIPT_FOLDER;
 
     /* MAIN */
