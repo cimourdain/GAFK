@@ -41,7 +41,7 @@ The App folder contains the following folders:
 
 * **Controllers**: This folder contains all the controllers classes of your website. (All controllers inherit from the controller class in the /core folder.)
 * **Model**: This folder contains all the model classes of your website. (All models inherit from the PDOManager class in the /core folder.)
-* **Views**: This folder contains all views of your websites. Views are html files with emmbedd php variables. Note: you can define freely the organization of subfolders and files in this directory. 
+* **Views**: This folder contains all views of your websites. Views are html files with embedded php variables. Note: you can define freely the organization of subfolders and files in this directory.
 
 ## Usage
 
@@ -49,3 +49,42 @@ The App folder contains the following folders:
 
 GAFK require to enable URL Rewriting on your server. All request must point to the root index.html file.
 *An example of a .htaccess is provided in the repository.*
+
+### Init your config file
+
+The first step is to init your application values in the /App/Config.class.php files. You probably want to update your website address, your site name, your db access params.
+
+### Define your routes
+
+In the /App/Routes.json file, define your website routes. Each routes is defined by a name (only for your usage) witch is associated a url pattern, a controller and and action.
+
+Example:
+
+```javascript
+{
+  "home": {
+    "regex_pattern": "/?",
+    "controller": "main",
+    "action": "Index"
+  },
+  "page2": {
+    "regex_pattern": "/page2/(\\w*)/?",
+    "controller": "main",
+    "action": "page2"
+  },
+  "admin": {
+    "regex_pattern": "/second_ctrl/?",
+    "controller": "second",
+    "action": "Index"
+  }
+}
+```
+
+Notes :
+* Patterns are regular expressions. As a consequence, you can "catch" elements in your pattern (using parenthesis) to use them in your controller (see controller section below).
+* Routes names have to be unique
+* If no route is found the \App\Controllers\ErrorController will be called, as a consequence it has be be implemented in your project.
+* The controller name and the action name will be transformed with the PHP ucfirst function to get the controller. As a consequence casing is not important when defining your routes.
+
+
+ 
