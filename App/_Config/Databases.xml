@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<databases>
-	<local>
-		<module module_name="Blog,forum" host="localhost" db_name="blog" db_user = "root" db_pass="" />
-	</local>
-	<remote>
-	</remote>
-</databases>

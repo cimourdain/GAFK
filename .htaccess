@@ -1,0 +1,5 @@
+#Options +FollowSymLinks -MultiViews
+# Turn mod_rewrite on
+RewriteEngine On
+RewriteCond %{REQUEST_URI}  !(\.png|\.jpg|\.gif|\.jpeg|\.bmp|\.css)$
+RewriteRule ^(.*)$ index.php [L]

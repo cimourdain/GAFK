@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<definitions>
-	<define var="Name" value="GF2 Default App" />
-	<define var="Author" value="Gabriel Oger" />
-	<define var="Version" value="0.01" />
-	<define var="Default_module" value="Default" />
-	<define var="Host" value="gafk" />
-</definitions>

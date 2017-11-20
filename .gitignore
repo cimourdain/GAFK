@@ -1,4 +1,2 @@
-/lib/vendor/*
-/lib/composer.json
-/lib/composer.lock
-/Web/scss
+*.log
+img/

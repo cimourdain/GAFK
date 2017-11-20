@@ -1,0 +1,17 @@
+{
+  "home": {
+    "regex_pattern": "/?",
+    "controller": "main",
+    "action": "Index"
+  },
+  "page2": {
+    "regex_pattern": "/page2/(\\w*)/?",
+    "controller": "main",
+    "action": "page2"
+  },
+  "admin": {
+    "regex_pattern": "/second_ctrl/?",
+    "controller": "second",
+    "action": "Index"
+  }
+}

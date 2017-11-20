@@ -1,0 +1,9 @@
+
+<?php
+if(count($messages) > 0){
+  echo '<div class="messages">';
+  foreach($messages as $m)
+    echo "<div class=\"message ".$m["type"]."\">(".$m["level"]." - ".$m["type"].") ".$m["message"]."</div>";
+  echo '</div>';
+}
+?>
