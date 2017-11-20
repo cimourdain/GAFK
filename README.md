@@ -123,6 +123,7 @@ class TestController extends AppController{
 
   /* Execute action Page2 */
   protected function executePage2($params = null){
+    //usage of param fetched in the URL regex pattern by the router
     echo "first param: ".$this->_params[0];
     //call Model
     //render templates
@@ -143,3 +144,28 @@ class TestController extends AppController{
 ```
 
 Details of using model and templates in controllers will be detailed in the following sections
+
+
+### Models
+#### Definition
+
+Model classes are used to communicate with Database.
+
+In your controllers you can call models. Models are classes stored in /App/Model folder
+
+**Filename**: Model filename is almost free (until it ends with .class.php). It is recommended that you name them with the following pattern:
+(PDO + Name + Manager.class.php) example: PDOTestmodelManager.class.php
+
+**Namespace**: Model class must be included in the namesapce App\Model
+
+**Naming**: The model name have to be consistent with the filename.
+
+**Inheritance** : Model class must inherit from the core absract class \core\PDOManager
+
+**Methods**: Model classes can use the following methods inherited from \core\PDOManager
+* connect_db(): automatically uses params defined in the /App/Config.class.php
+* executePDO(): simple method taking a pdo object and a data array as an input, execute the request and return the resulting PDO object (or null if fail).
+* addMessage(): if you provide a Logger object on object instantiation, this method allow to addMessages to the logger.
+
+
+#### Usage
