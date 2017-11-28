@@ -7,10 +7,10 @@ TO-DO detail file format
 namespace core;
 
 class FormValidator{
+    use TLoggedClass;
 
     protected $_post = array();
     protected $_files = array();
-    protected $_logger;
 
     public function __construct($logger){
         $this->setPostData($_POST);
@@ -27,7 +27,7 @@ class FormValidator{
                 $all_fields_received = true;
                 foreach($fields as $f){
                     if(!$this->fieldSubmitted($f)){
-                        $this->_logger->AddMessage("Field ".$f." not received.");
+                        $this->AddMessage("Field ".$f." not received.");
                         $all_fields_received = false;
                     }
                 }
@@ -36,6 +36,7 @@ class FormValidator{
         }
         return false;
     }
+
     /* function to check if a specific field was submitted */
     public function fieldSubmitted($field){
         if(isset($this->_post[$field]) || isset($this->_files[$field]))
@@ -46,41 +47,20 @@ class FormValidator{
 
     /* function to check field format (see header for fofmat detail) */
     public function checkFieldFormat($field, $format){
-        if($this->fieldSubmitted($field) && $this->getFieldValue($field) != null && isset($format["type"]) && $format["type"] != "checkbox_value"){
-            switch($format["type"]){
-            case "text":
-                return $this->checkFieldSize($field, $format);
-                break;
-            case "email":
-                return $this->checkFieldIsEmail($field);
-                break;
-            case "login_or_email":
-                return $this->checkFieldIsTextOrMail($field, $format);
-                break;
-            case "identical":
-                return $this->checkFieldsIdenticals($field, $format);
-                break;
-            case "image":
-                return $this->checkImageUpload($field, $format);
-                break;
-            case "integer":
-                return $this->checkIsInteger($field, $format);
-                break;
-            case "numeric":
-                return $this->checkIsNumeric($field, $format);
-                break;
-            default:
-                $this->_logger->AddMessage("Field ".$field.": format ".$format["type"]." cannot be checked.");
-                return false;
+        if($this->fieldSubmitted($field) && $this->getFieldValue($field) != null){
+          foreach($format as $type => $value){
+            $check_method = "check".ucfirst($type);
+            if(method_exists($this, $check_method)){
+              return $this->$check_method($field, $value, true);
             }
-        }
-        else if($format["type"] == "checkbox_value"){
-          //in exception because checkbox $field not sumbmitted if nothing checked
-          return $this->checkValueChecked($field, $format);
+            else
+              $this->AddMessage("Cannot check ".$type." on field ".$field.".", "error", "dev");
+          }
         }
         else
-            $this->_logger->AddMessage("Field ".$field." empty or impossible to check.");
-            return false;
+            $this->AddMessage("Field ".$field." empty or impossible to check.", "error", "user");
+
+        return false;
     }
 
     /* function to check field format on multiple fields */
@@ -93,78 +73,56 @@ class FormValidator{
         return $formats_valid;
     }
 
-    /* function to check field size based on format min/max */
-    protected function checkFieldSize($field, $format, $log = true){
-        $l = strlen($this->getFieldValue($field));
-        if((!isset($format["min"]) || $l >= $format["min"]) && (!isset($format["max"]) || $l <= $format["max"]))
+    /* function to check min size of field */
+    protected function checkMin($field, $min, $log = true){
+        if(strlen($this->getFieldValue($field)) >= $min )
             return true;
         else if($log)
-            $this->_logger->AddMessage("Field ".$field. " must have between ".$format["min"]." and ".$format["max"]." characters.");
+            $this->AddMessage("Field ".$field. " must have a min length of ".$min." characters.");
+
+        return false;
+    }
+
+    /* function to check max size of field */
+    protected function checkMax($field, $max, $log = true){
+        if(strlen($this->getFieldValue($field)) <= $max )
+            return true;
+        else if($log)
+            $this->AddMessage("Field ".$field. " must have a max length of ".$max." characters.");
 
         return false;
     }
 
     /* function to check that field value has an email format */
-    protected function checkFieldIsEmail($field, $log = true){
+    protected function checkEmail($field, $value = true, $log = true){
         if(filter_var($this->getFieldValue($field), FILTER_VALIDATE_EMAIL))
             return true;
 
         if($log)
-            $this->_logger->AddMessage("Invalid email format for field ".$field);
-        return false;
-    }
-
-    /* function to check that field is a text or an email */
-    protected function checkFieldIsTextOrMail($field, $format){
-        if($this->checkFieldSize($field, $format, false) || $this->checkFieldIsEmail($field, false))
-            return true;
-        $this->_logger->addMessage("Field ".$field." have to be an email or a text.");
+            $this->AddMessage("Invalid email format for field ".$field);
         return false;
     }
 
     /* function to check that 2 fields are identicals */
-    protected function checkFieldsIdenticals($field, $format){
-        if(isset($format["field"]) && $this->fieldSubmitted($format["field"]) && $this->getFieldValue($field) ==  $this->getFieldValue($format["field"]))
+    protected function checkIdentical($field, $other_field_name, $log = true){
+        if($this->fieldSubmitted($other_field_name) && $this->getFieldValue($field) ==  $this->getFieldValue($other_field_name))
             return true;
-
-        $this->_logger->AddMessage("Field ".$field. "  must be identical to ".$format["field"]);
+        if($log)
+          $this->AddMessage("Field ".$field. "  must be identical to ".$other_field_name);
         return false;
     }
 
-    /* function to check that a value is in array */
-    protected function checkValueChecked($field, $format){
-      if(!$format["mandatory"] && (!$this->fieldSubmitted($field) || ($this->fieldSubmitted($field) && in_array($this->getFieldValue($field), $format["allowed_values"]))))
-        return true;
-      else if ($format["mandatory"] && $this->fieldSubmitted($field) && in_array($this->getFieldValue($field), $format["allowed_values"]))
-        return true;
-      return false;
-    }
-
-    protected function checkIsInteger($field, $format){
-      if($this->fieldSubmitted($field)){
+    /* check if value is integer */
+    protected function checkInt($field, $value = true, $log = true){
         if(is_numeric($this->getFieldValue($field)) && is_int(intval($this->getFieldValue($field))))
           return true;
-        else if(isset($format["allowed_exceptions"]) && in_array($this->getFieldValue($field), $format["allowed_exceptions"]))
-          return true;
-      }
 
-      $this->_logger->addMessage("Field ".$field." (".$this->getFieldValue($field).")is not an integer.", "error", "dev");
+      $this->addMessage("Field ".$field." (".$this->getFieldValue($field).") is not an integer.", "error", "dev");
       return false;
-
     }
 
-    protected function checkIsNumeric($field, $format){
-      if($this->fieldSubmitted($field)){
-        if(is_numeric($this->getFieldValue($field)) )
-          return true;
-      }
-
-      $this->_logger->addMessage("Field ".$field." is not a number.", "error", "dev");
-      return false;
-
-    }
     /* function to check img upload */
-    public function checkImageUpload($field, $format){
+    /*public function checkImageUpload($field, $format){
       if(isset($_FILES[$field])){
         $target_dir = $format["target_dir"];
         $target_file = $target_dir . basename($_FILES[$field]["name"]);
@@ -183,23 +141,24 @@ class FormValidator{
               if (move_uploaded_file($_FILES[$field]["tmp_name"], $target_file))
                 return $target_file;
               else
-                $this->_logger->addMessage("Sorry, there was an error uploading your file.", "error", "user");
+                $this->addMessage("Sorry, there was an error uploading your file.", "error", "user");
             }
             else
-            $this->_logger->addMessage("Only png, jpg, jpeg and gif are allowed, the image given was regognised as \"".$imageFileType."\".", "error", "user");
+            $this->addMessage("Only png, jpg, jpeg and gif are allowed, the image given was regognised as \"".$imageFileType."\".", "error", "user");
           }
           else
-          $this->_logger->addMessage("File is too large, max file size is ".$_FILES[$field]["size"]." and product size is ".$format["max_size"].".", "error", "user");
+          $this->addMessage("File is too large, max file size is ".$_FILES[$field]["size"]." and product size is ".$format["max_size"].".", "error", "user");
         }
         else
-          $this->_logger->addMessage("File is not an image.", "error", "user");
+          $this->addMessage("File is not an image.", "error", "user");
       }else{
-        $this->_logger->addMessage("Image not submitted.", "error", "user");
+        $this->addMessage("Image not submitted.", "error", "user");
       }
 
       return false;
-    }
+    }*/
 
+    /* reset content of form */
     public function resetFormContent(){
         $this->_post = array();
         $_POST = array();
@@ -207,16 +166,12 @@ class FormValidator{
     }
 
     /* SETTERS */
-    protected function setPostData($p){
+    public function setPostData($p){
         $this->_post = $p;
     }
 
     protected function setFilesData($f){
         $this->_files = $f;
-    }
-
-    protected function setLogger($l){
-        $this->_logger = $l;
     }
 
     /* GETTERS */
@@ -233,7 +188,7 @@ class FormValidator{
 
     public function getFieldValueSecure($f, $default=null){
       if(is_string($this->getFieldValue($f, $default)))
-        return htmlentities($this->getFieldValue($f, $default));
+        return htmlentities(trim($this->getFieldValue($f, $default)));
       else
         return $this->getFieldValue($f, $default);
     }

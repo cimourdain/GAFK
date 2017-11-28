@@ -2,19 +2,19 @@
 
 namespace core;
 use PDO;
-abstract class PDOManager{
 
-    protected $_pdo = null;
-    protected $_logger = null;
+abstract class PDOManager{
+    use TLoggedClass;
+
+    protected static $_pdo = null;
 
     public function __construct($logger = null){
         $this->setLogger($logger);
-        $this->connect_db();
+        self::connect_db();
     }
 
     /* Method to connect DB */
     protected function connect_db(){
-
         try{
             $dsn = "mysql:host=".\App\Config::DB_HOST.";dbname=".\App\Config::DB_NAME.";charset=".\App\Config::DB_CHARSET.";port=".\App\Config::DB_PORT;
             $opt = [
@@ -23,9 +23,8 @@ abstract class PDOManager{
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ];
 
-            $this->_pdo = new \PDO($dsn, \App\Config::DB_USER, \App\Config::DB_PASSWORD, $opt);
+            self::$_pdo = new \PDO($dsn, \App\Config::DB_USER, \App\Config::DB_PASSWORD, $opt);
             $this->addMessage("Connection to DB successful.", "success", "dev");
-            $this->_connected = true;
         }
         catch (PDOException $e) {
             error_log($e->getMessage()."\n", 3, \App\Config::ERROR_LOG_FILE);
@@ -34,10 +33,23 @@ abstract class PDOManager{
 
     }
 
+    /* Method to define if DB is connected */
+    public static function isConnected(){
+        if(self::$_pdo != null && self::$_pdo->getAttribute(constant("PDO::ATTR_CONNECTION_STATUS")) != null)
+            return true;
+        return false;
+    }
+
     /* Method to execute PDO request (with try/catch) */
-    public function executePDO($s, $data){
+    protected function executePDO($sql, $data = []){
+      if(self::isConnected()){
         try{
-            $s->execute($data);
+            if(empty($data))
+              $s = self::$_pdo->query($sql);
+            else{
+              $s = self::$_pdo->prepare($sql);
+              $s->execute($data);
+            }
             return $s;
         }
         catch (PDOException $e) {
@@ -45,38 +57,10 @@ abstract class PDOManager{
             $this->addMessage("Error performing request in DB ".$e->getMessage(), "error", "dev");
             return null;
         }
+      }
+      $this->addMessage("Database not connected", "error", "dev");
+      return null;
     }
-
-    /* Method to add Messages to Logger */
-    protected function addMessage($message, $type = "info", $level = "dev"){
-        if($this->loggerDefined())
-            $this->_logger->AddMessage($message, $type, $level);
-    }
-
-    /* SETTERS */
-    /* Method to set logger */
-    protected function setLogger($l){
-        //if($l instanceof \core\Logger)
-            $this->_logger = $l;
-    }
-
-
-    /* GETTERS */
-    /* Method to check if logger is defined */
-    protected function loggerDefined(){
-        if($this->_logger != null)
-            return true;
-
-        return false;
-    }
-
-    /* Method to define if DB is connected */
-    public function isConnected(){
-        if($this->_pdo != null)
-            return true;
-        return false;
-    }
-
 }
 
 ?>

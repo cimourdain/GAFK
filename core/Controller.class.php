@@ -11,7 +11,7 @@ abstract class Controller{
   public function __construct($action = "Index", $params = array()){
     $this->setAction($action);
     $this->setParams($params);
-    $this->_logger = new \Logger();
+    $this->setLogger(new \Logger());
   }
 
   /* execute action method (+ before & after function) */
@@ -32,6 +32,7 @@ abstract class Controller{
     $this->_params = $params;
   }
 
+
   protected function before(){
 
   }
@@ -39,6 +40,30 @@ abstract class Controller{
   protected function after(){
 
   }
+
+  /* Method to add Messages to Logger */
+  protected function addMessage($message, $type = "info", $level = "dev"){
+      if($this->loggerDefined())
+          $this->_logger->AddMessage($message, $type, $level);
+  }
+
+  /* SETTERS */
+  /* Method to set logger */
+  protected function setLogger($l){
+      if($l instanceof \Logger)
+          $this->_logger = $l;
+  }
+
+
+  /* GETTERS */
+  /* Method to check if logger is defined */
+  protected function loggerDefined(){
+      if($this->_logger != null)
+          return true;
+
+      return false;
+  }
+
 
 }
 
