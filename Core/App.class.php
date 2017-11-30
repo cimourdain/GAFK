@@ -13,7 +13,7 @@ class App{
         $router = new Router($this->_logger);
         $this->launchController($router->execute($_SERVER['REQUEST_URI']));
 
-        $this->prettyPrintMessages();
+        //$this->prettyPrintMessages();
     }
 
     //function to get controllerName from Route
