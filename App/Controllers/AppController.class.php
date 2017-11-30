@@ -2,19 +2,19 @@
 
 namespace App\Controllers;
 
-class AppController extends \core\Controller{
+class AppController extends \Core\Controller{
 
   /* Action performed before execution */
   protected function before(){
-    \core\Template::setStatic("site_name", \App\Config::SITE_NAME);
-    \core\Template::setStatic("author", \App\Config::AUTHOR);
+    \Core\Template::setStatic("site_name", \App\Config::SITE_NAME);
+    \Core\Template::setStatic("author", \App\Config::AUTHOR);
   }
 
   /* Action performed after execution */
   protected function after(){
-    \core\Template::setStatic("header", \core\Template::render("partials/header.html"));
-    \core\Template::setStatic("footer", \core\Template::render("partials/footer.html"));
-    echo \core\Template::render("partials/base.html");
+    \Core\Template::setStatic("header", \Core\Template::render("partials/header.html"));
+    \Core\Template::setStatic("footer", \Core\Template::render("partials/footer.html"));
+    echo \Core\Template::render("partials/base.html");
   }
 
 }

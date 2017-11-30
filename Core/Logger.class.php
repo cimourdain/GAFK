@@ -1,9 +1,13 @@
 <?php
 
-
+namespace Core;
 
 class Logger{
     protected $_messages = array();
+
+    public function __construct(){
+
+    }
 
     public function AddMessage($message, $type = "info", $level = "dev"){
         $m = ["message" => $message, "type" => $type, "level" => $level];
@@ -19,6 +23,7 @@ class Logger{
         }
         return $messages;
     }
+
 
     public function getMessagesHTML(){
         $html = '<div class="messages">';

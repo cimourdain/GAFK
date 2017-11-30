@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace Core;
 
 class Template{
     private static $_vars = ["base_url" => \App\Config::BASE_URL];

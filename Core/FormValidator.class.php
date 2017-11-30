@@ -4,7 +4,7 @@
 TO-DO detail file format
 *************************/
 
-namespace core;
+namespace Core;
 
 class FormValidator{
     use TLoggedClass;
@@ -135,8 +135,8 @@ class FormValidator{
         if($isImage !== false) {
           if($_FILES[$field]["size"] <= $format["max_size"]){
             if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif"){
-              \core\FilesManager::createDirIfDoesNotExists($target_dir);
-              \core\FilesManager::deleteAllFromDir($target_dir);
+              \Core\FilesManager::createDirIfDoesNotExists($target_dir);
+              \Core\FilesManager::deleteAllFromDir($target_dir);
 
               if (move_uploaded_file($_FILES[$field]["tmp_name"], $target_file))
                 return $target_file;

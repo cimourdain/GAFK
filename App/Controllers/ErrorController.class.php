@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
-class ErrorController extends \core\Controller{
+class ErrorController extends AppController{
 
   protected function executeIndex($params = null){
-    echo \core\Template::render("404.html");
+    \Core\Template::setStatic("title", "Home page");
+    \Core\Template::setStatic("content", \Core\Template::render("404.html"));
   }
 
 }

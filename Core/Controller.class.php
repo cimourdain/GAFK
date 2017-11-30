@@ -1,17 +1,20 @@
 <?php
 
-namespace core;
+namespace Core;
 
 abstract class Controller{
+  use TLoggedClass;
+
   protected $_action = null;
   protected $_params = array();
-  protected $_logger = null;
 
   /* Build controller with action & route params */
-  public function __construct($action = "Index", $params = array()){
-    $this->setAction($action);
-    $this->setParams($params);
-    $this->setLogger(new \Logger());
+  public function __construct($route, $logger = null){
+    $this->setLogger($logger);
+    $this->addMessage("Enter controller", "info", "dev");
+    $this->setAction($route["action"]);
+    $this->setParams($route["params"]);
+
   }
 
   /* execute action method (+ before & after function) */
@@ -23,13 +26,19 @@ abstract class Controller{
   }
 
   /* define action */
-  protected function setAction($action){
-    $this->_action = $action;
+  protected function setAction($action = "Index"){
+    if(!empty($action))
+      $this->_action = $action;
+    else
+      $this->_action = "Index";
   }
 
   /* define params */
-  protected function setParams($params){
-    $this->_params = $params;
+  protected function setParams($params = []){
+    if(is_array($params) && !empty($params))
+      $this->_params = $params;
+    else
+      $this->_params = [];
   }
 
 

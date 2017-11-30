@@ -2,8 +2,8 @@
 
 session_start();
 
-require_once(__DIR__ . '/core/classloader'. '.php');
+require_once(__DIR__ . '/Core/classloader'. '.php');
 
-new core\App();
+new Core\App();
 
 ?>

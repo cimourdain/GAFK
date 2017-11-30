@@ -12,7 +12,7 @@ GAFK is a PHP framework/lib developed for educational purposes. The main princip
 ### Main folders
 GAFK uses two main folder:
 
-* **/Core**: This folder contains all core classes, you probably do not have to modify them
+* **/Core**: This folder contains all Core classes, you probably do not have to modify them
 * **/App** : This folder contains all files specific to your application
 
 ### /Core
@@ -39,8 +39,8 @@ The App folder contains the following files :
 
 The App folder contains the following folders:
 
-* **Controllers**: This folder contains all the controllers classes of your website. (All controllers inherit from the controller class in the /core folder.)
-* **Model**: This folder contains all the model classes of your website. (All models inherit from the PDOManager class in the /core folder.)
+* **Controllers**: This folder contains all the controllers classes of your website. (All controllers inherit from the controller class in the /Core folder.)
+* **Model**: This folder contains all the model classes of your website. (All models inherit from the PDOManager class in the /Core folder.)
 * **Views**: This folder contains all views of your websites. Views are html files with embedded php variables. Note: you can define freely the organization of subfolders and files in this directory.
 
 ## Usage
@@ -96,7 +96,7 @@ You will create all controller of your website in the /App/Controllers/ folder. 
 
 **Namepace** : All controllers must be included in the __App\Controllers__ namespace.
 
-**Inheritance** : All your controllers class will inherit from the abstract /core/Controller class.
+**Inheritance** : All your controllers class will inherit from the abstract /Core/Controller class.
 
 **Methods**:
 * Controllers have to implements execute methods for every action defined in the Router. For each action, create a method with the following naming convention "execute+(action name with first letter in uppercase)" example: __executeMyaction()__
@@ -160,9 +160,9 @@ In your controllers you can call models. Models are classes stored in /App/Model
 
 **Naming**: The model name have to be consistent with the filename.
 
-**Inheritance** : Model class must inherit from the core absract class \core\PDOManager
+**Inheritance** : Model class must inherit from the Core absract class \Core\PDOManager
 
-**Methods**: Model classes can use the following methods inherited from \core\PDOManager
+**Methods**: Model classes can use the following methods inherited from \Core\PDOManager
 * connect_db(): automatically uses params defined in the /App/Config.class.php
 * executePDO(): simple method taking a pdo object and a data array as an input, execute the request and return the resulting PDO object (or null if fail).
 * addMessage(): if you provide a Logger object on object instantiation, this method allow to addMessages to the logger.

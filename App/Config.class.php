@@ -4,7 +4,7 @@ namespace App;
 
 class Config{
     const WEBSITE_ADDRESS = 'http://localhost/';
-    const SCRIPT_FOLDER = 'install_folder/';
+    const SCRIPT_FOLDER = 'rendu/GAFK/';
     const BASE_URL = self::WEBSITE_ADDRESS.self::SCRIPT_FOLDER;
 
     /* MAIN */

@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class PDOXXXManager extends \core\PDOManager{
+class PDOXXXManager extends \Core\PDOManager{
 
 
 }
