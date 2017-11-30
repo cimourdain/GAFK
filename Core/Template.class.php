@@ -6,9 +6,7 @@ class Template{
     private static $_vars = ["base_url" => \App\Config::BASE_URL];
     private static $_templates_folder = __DIR__."/../App/Views/";
 
-    private function __construct(){
-
-    }
+    private function __construct(){}
 
     public static function getStatic($name){
         return self::$_vars[$name];

@@ -9,6 +9,14 @@ GAFK is a PHP framework/lib developed for educational purposes. The main princip
 
 ## Presentation
 
+### Features
+
+* Easy Routes management
+* Easy Form validation
+* Cache management
+* Advanced Logging
+* Maintenance mode
+
 ### Main folders
 GAFK uses two main folder:
 
@@ -43,6 +51,7 @@ The App folder contains the following folders:
 * **Controllers**: This folder contains all the controllers classes of your website. (All controllers inherit from the controller class in the /Core folder.)
 * **Model**: This folder contains all the model classes of your website. (All models inherit from the PDOManager class in the /Core folder.)
 * **Views**: This folder contains all views of your websites. Views are html files with embedded php variables. Note: you can define freely the organization of subfolders and files in this directory.
+* **Cache**: Folder used to store cached pages
 
 ## Usage
 
@@ -121,8 +130,8 @@ class TestController extends AppController{
   protected function executeIndex($params = null){
       //call Model (see section below)
       $um = new \App\Model\PDOUsersManager();
-      users = $um->getAllUsers();
-      //render templates
+      $users = $um->getAllUsers();
+      //render templates (see section below)
   }
 
   /* Execute action Page2 */
@@ -168,7 +177,7 @@ In your controllers you can call models. Models are classes stored in /App/Model
 
 **Methods**: Model classes can use the following methods inherited from \Core\PDOManager
 * [static]connect_db(): automatically uses params defined in the /App/Config.class.php, this method is automatically called with the first request executed by the model
-* [static]executePDO(): simple method taking a pdo object and a data array as an input, execute the request and return the resulting PDO object (or null if fail).
+* executePDO(): simple method taking a pdo object and a data array as an input, execute the request and return the resulting PDO object (or null if fail).
 * addMessage(): if you provide a Logger object on object instantiation, this method allow to addMessages to the logger.
 
 #### Usage
@@ -177,6 +186,7 @@ Basic example of Model
 
 File: App/Model/PDOUserManager.class.php
 ```
+<?php
 namespace App\Model;
 
 class PDOUserManager extends \Core\PDOManager{
@@ -198,9 +208,74 @@ class PDOUserManager extends \Core\PDOManager{
   }
 
 }
+?>
 ```
 
 ### Views
+#### Definition
+Views are handled by the Temlpate class (Core/Template.class.php).This class is a "singleton", it cannot be instanced, all its method have to be called in a static way.
+
+To perform templating, two actions are provided:
+* **Injecting**: With the static method setStatic(), templates variables can be added to template previously to rendering
+* **Rendering**: With the static method render(), template files can be converted to HTML (by integration of data injected with the setStatic method). The final page rendering have to be provided to the controller setHTML() method to be rendered with cache management handling.
+
+Note: Template files have to be created in the App/Views/ folder
+
+#### Usage
+
+If the two following template files are created
+
+App/Views/pages/articles.php
+```
+<h1>Article list</h1>
+
+<?php
+foreach($articles as $a){
+  echo "<h2>".$a["title"]."</h2>";
+  echo "<p>".$a["text"]."</p>";
+}
+
+?>
+```
+
+App/Views/partials/main.php
+```
+<html>
+<head>
+</head>
+
+<body>
+  <header><?php echo $site_name;?>
+  <?php echo $content; ?>
+</body>
+</html>
+
+?>
+```
+
+in the controller, the following code allow to inject and render
+
+```
+<?php
+  protected function before(){
+      \Core\Template::setStatic("site_name", "My site name");//you can use the config value of course
+  }
+
+  function executeIndex(){
+    $am = new \App\Model\PDOArticlesManager();
+    $articles = $um->getAllArticles();
+
+    \Core\Template::setStatic("articles", $articles);
+    \Core\Template::setStatic("content", \Core\Template::render("pages/articles.php"));
+
+  }
+
+  protected function after(){
+      this->setHTML(\Core\Template::render("partials/main.php"));//send final rendering to setHTML method
+  }
+
+?>
+```
 
 ### Logging
 
