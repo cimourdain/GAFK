@@ -37,7 +37,7 @@ trait TLoggedClass
 
   protected function prettyPrintMessages($types = ["success", "info", "error"], $levels = ["user", "dev"]){
       $m = $this->getMessages($types, $levels);
-      print("<pre>".print_r($m)."</pre>");
+      print("<pre>".print_r($m, true)."</pre>");
   }
 
 }

@@ -14,7 +14,7 @@ class AppController extends \Core\Controller{
   protected function after(){
     \Core\Template::setStatic("header", \Core\Template::render("partials/header.html"));
     \Core\Template::setStatic("footer", \Core\Template::render("partials/footer.html"));
-    echo \Core\Template::render("partials/base.html");
+    $this->setHTML(\Core\Template::render("partials/base.html"));
   }
 
 }

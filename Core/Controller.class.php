@@ -7,6 +7,7 @@ abstract class Controller{
 
   protected $_action = null;
   protected $_params = array();
+  protected $_html = "";
 
   /* Build controller with action & route params */
   public function __construct($route, $logger = null){
@@ -17,12 +18,30 @@ abstract class Controller{
 
   }
 
+  protected function before(){
+
+  }
+
+  protected function after(){
+
+  }
+
   /* execute action method (+ before & after function) */
-  public function execute(){
-    $this->before();
-    $function = "execute".ucfirst($this->_action);
-    $this->$function();
-    $this->after();
+  public function execute($cache = null){
+      $this->before();
+      $function = "execute".ucfirst($this->_action);
+      $this->$function();
+      $this->after();
+      $this->render($cache);
+  }
+
+  //render : set HTML output to cache if necessary && render output
+  protected function render($cache = null){
+    $this->addMessage("Update cache file", "info", "dev");
+    if($cache != null && $cache->isCacheRequired() && !$cache->isCacheAvailable())
+      $cache->updateCache($this->getHTML());
+
+    echo $this->getHTML();
   }
 
   /* define action */
@@ -41,36 +60,14 @@ abstract class Controller{
       $this->_params = [];
   }
 
-
-  protected function before(){
-
+  //set HTML output
+  protected function setHTML($html){
+    $this->_html = $html;
   }
 
-  protected function after(){
-
-  }
-
-  /* Method to add Messages to Logger */
-  protected function addMessage($message, $type = "info", $level = "dev"){
-      if($this->loggerDefined())
-          $this->_logger->AddMessage($message, $type, $level);
-  }
-
-  /* SETTERS */
-  /* Method to set logger */
-  protected function setLogger($l){
-      if($l instanceof \Logger)
-          $this->_logger = $l;
-  }
-
-
-  /* GETTERS */
-  /* Method to check if logger is defined */
-  protected function loggerDefined(){
-      if($this->_logger != null)
-          return true;
-
-      return false;
+  //get HTML output
+  protected function getHTML(){
+    return $this->_html;
   }
 
 

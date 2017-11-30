@@ -22,9 +22,10 @@ class Router {
         foreach($routes_json as $route_name => $route){
           //check if route is properly defined
           if(isset($route["regex_pattern"]) && !empty($route["regex_pattern"]) && isset($route["controller"]) && !empty($route["controller"]) && isset($route["action"]) && !empty($route["action"])){
-            $route["regex_pattern"] =  '/^' . str_replace('/', '\/', $route["regex_pattern"]) . '$/';//update regex pattern
-            $route["controller"] = ucfirst(strtolower($route["controller"]));
-            $route["action"] = ucfirst(strtolower($route["action"]));
+            $route["regex_pattern"] = $this->getPattern($route["regex_pattern"]);
+            $route["controller"]    = $this->getControllerName($route["controller"]);
+            $route["action"]        = $this->getActionName($route["action"]);
+            $route["cache_seconds"] = $this->getCacheDuration($route);
             array_push( $this->_routes, $route);
           }else
             $this->addMessage("Cannot add pattern ".$route_name." : ".implode(",", $route), "error", "dev");
@@ -44,18 +45,38 @@ class Router {
       }
     }
 
+    protected function getPattern($p){
+      return '/^' . str_replace('/', '\/', $p) . '$/';//update regex pattern
+    }
+
+    protected function getControllerName($c){
+      return ucfirst(strtolower($c));
+    }
+
+    protected function getActionName($a){
+      return ucfirst(strtolower($a));
+    }
+
+    protected function getCacheDuration($r){
+      if(!isset($r["cache_seconds"]) || !is_int(intval($r["cache_seconds"])) || $r["cache_seconds"] < 0)
+        return 0;
+      else
+        return intval($r["cache_seconds"]);
+    }
+
     //get route for URL
     public function execute($uri) {
         $uri = str_replace(\App\Config::SCRIPT_FOLDER, "", $uri);
         foreach ($this->_routes as $r) {
             //echo "Check route ".$pattern." against ".$uri."<br />";
-            if (preg_match($r["regex_pattern"], $uri, $params) === 1) {
+            if (preg_match($r["regex_pattern"], $uri, $r["params"]) === 1) {
                 //remove first value of preg_match output
-                array_shift($params);
-                return ["controller" => $r["controller"], "action" => $r["action"], "params"=>$params];
+                array_shift($r["params"]);
+                return $r;
             }
         }
-        return ["controller" => "Error", "action" => "Index", "params"=>[]];
+        //return default controller
+        return ["controller" => "Error", "action" => "Index", "params"=>[], "cache_seconds" => \App\Config::ERROR_CONTROLLER_CACHE];
     }
 
 }

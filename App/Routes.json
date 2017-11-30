@@ -7,7 +7,8 @@
   "page2": {
     "regex_pattern": "/page2/(\\w*)/?",
     "controller": "main",
-    "action": "page2"
+    "action": "page2",
+    "cache_seconds" : "20"
   },
   "admin": {
     "regex_pattern": "/second_ctrl/?",

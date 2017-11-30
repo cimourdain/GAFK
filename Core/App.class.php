@@ -13,23 +13,20 @@ class App{
         $router = new Router($this->_logger);
         $this->launchController($router->execute($_SERVER['REQUEST_URI']));
 
-        //$this->prettyPrintMessages();
+        $this->prettyPrintMessages();
     }
 
     //function to get controllerName from Route
     private function launchController($route){
-      if(!empty($route) && isset($route["controller"]) && isset($route["action"]) && isset($route["params"])){
-        $controllerClassName = "\App\Controllers\\" . $route["controller"] . "Controller";
-        if(class_exists($controllerClassName)){
-          $this->addMessage("Enter controller ".$controllerClassName, "info", "dev");
-          $c = new $controllerClassName($route, $this->_logger);
-          $c->execute();
-        }
-        else{
-          $this->addMessage("ControllerClass not found", "error", "dev");
-          $this->prettyPrintMessages();
-          throw new \Exception ("ControllerClass not found");
-        }
+      if(!empty($route) && isset($route["controller"]) && isset($route["action"]) && isset($route["params"]) && class_exists(($controllerClassName = "\App\Controllers\\" . $route["controller"] . "Controller"))) {
+          //instanciate cache
+          $cache = new \Core\Cache($route, $this->_logger);
+          //call controller if no cached version to render
+          if(!$this->getCachedView($cache, $route)){
+            $this->addMessage("Enter controller ".$controllerClassName, "info", "dev");
+            $c = new $controllerClassName($route, $this->_logger);
+            $c->execute($cache);
+          }
       }
       else{
         $this->addMessage("Invalid or empty route", "error", "dev");
@@ -38,6 +35,14 @@ class App{
       }
     }
 
+    //render chached version if required and available
+    protected function getCachedView($cache, $route){
+      if($cache->isCacheRequired() && $cache->isCacheAvailable()){
+          $cache->renderCache();
+          return true;
+        }
+      return false;
+    }
 }
 
  ?>
