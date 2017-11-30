@@ -7,7 +7,7 @@ class Config{
     const SCRIPT_FOLDER = 'rendu/GAFK/';
     const BASE_URL = self::WEBSITE_ADDRESS.self::SCRIPT_FOLDER;
     const TIMEZONE = 'Europe/Paris';
-    
+
     /* MAIN */
     const SITE_NAME = "My website";
     const AUTHOR = "My Name";
@@ -23,8 +23,15 @@ class Config{
     const DB_PORT = '3306';
     const DB_CHARSET = 'utf8';
 
-    /*CACHE*/
+    /* Error controller cache duraction*/
     const ERROR_CONTROLLER_CACHE = 0;
+
+
+    /* Maintenance */
+    const MAINTENANCE_ACTIVE = true;
+    const MAINTENANCE_CONTROLLER = "Maintenance";
+    const MAINTENANCE_ACTION = "Index";
+    const MAINTENANCE_CACHE_DURATION_SECONDS = 20;
 }
 
 ?>

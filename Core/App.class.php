@@ -11,7 +11,11 @@ class App{
 
         //analyse url with router
         $router = new Router($this->_logger);
-        $this->launchController($router->execute($_SERVER['REQUEST_URI']));
+
+        if(\App\Config::MAINTENANCE_ACTIVE)
+          $this->launchController(["controller" => \App\Config::MAINTENANCE_CONTROLLER, "action" => \App\Config::MAINTENANCE_ACTION, "params" => [], "cache_seconds" => \App\Config:: MAINTENANCE_CACHE_DURATION_SECONDS]);
+        else
+          $this->launchController($router->execute($_SERVER['REQUEST_URI']));
 
         //$this->prettyPrintMessages();
     }

@@ -46,7 +46,7 @@ class Cache{
     if($folder = $this->getCacheFolder()){
       $file_path = $folder.'/'.$this->getCacheFileName();
       $this->addMessage("Check if cache file ".$file_path." exists.", "info", "dev");
-      $this->addMessage("Cache file age ".(time() - date (filemtime($file_path)))." seconds");
+      //$this->addMessage("Cache file age ".(time() - date (filemtime($file_path)))." seconds");
       if(file_exists($file_path) && (time() - date (filemtime($file_path))) < $this->_route["cache_seconds"]){
           $this->addMessage("Cache file ".$file_path." exists.", "info", "dev");
           $this->_cache_file = $file_path;
