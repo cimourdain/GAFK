@@ -25,6 +25,7 @@ The Core folder contains the following classes
 * **Template** : The template class is set to be used as static. It cannot be implemented. In controllers, binding values and defining templates are done statically (it is used as a singleton).
 * **PDOManager**: This abstract class defines the db connection and requests execution method. All model class in App will inherit it.
 * **Logger**: The Logger class simply manage an array of logs. It is used by Controllers and Model classes.
+* **Cache**: This class handle cache management.
 * **FormValidator** : This class simplify the form validation by providing helpers to check forms. (this class is optionnal)
 * **FileManager**: This class provides helpers to create and delete directories (this class is optionnal).
 
@@ -82,9 +83,10 @@ Example:
 
 Notes :
 * Patterns are regular expressions. As a consequence, you can "catch" elements in your pattern (using parenthesis) to use them in your controller (see controller section below).
-* Routes names have to be unique
+* Routes names have to be unique!
 * If no route is found the \App\Controllers\ErrorController will be called, as a consequence it has be be implemented in your project.
 * The controller name and the action name will be transformed with the PHP ucfirst function to get the controller. As a consequence casing is not important when defining your routes.
+* Routes are also used to define caching (see section caching below)
 
 ### Define your controllers
 
@@ -117,7 +119,9 @@ class TestController extends AppController{
 
   /* Execute action Index */
   protected function executeIndex($params = null){
-      //call Model
+      //call Model (see section below)
+      $um = new \App\Model\PDOUsersManager();
+      users = $um->getAllUsers();
       //render templates
   }
 
@@ -163,11 +167,47 @@ In your controllers you can call models. Models are classes stored in /App/Model
 **Inheritance** : Model class must inherit from the Core absract class \Core\PDOManager
 
 **Methods**: Model classes can use the following methods inherited from \Core\PDOManager
-* connect_db(): automatically uses params defined in the /App/Config.class.php
-* executePDO(): simple method taking a pdo object and a data array as an input, execute the request and return the resulting PDO object (or null if fail).
+* [static]connect_db(): automatically uses params defined in the /App/Config.class.php, this method is automatically called with the first request executed by the model
+* [static]executePDO(): simple method taking a pdo object and a data array as an input, execute the request and return the resulting PDO object (or null if fail).
 * addMessage(): if you provide a Logger object on object instantiation, this method allow to addMessages to the logger.
-
 
 #### Usage
 
-Basic example of 
+Basic example of Model
+
+File: App/Model/PDOUserManager.class.php
+```
+namespace App\Model;
+
+class PDOUserManager extends \Core\PDOManager{
+
+  public function getAllUsers(){
+    //call the executePDO method
+    $s = $this->executePDO("SELECT * FROM Users");
+    if($s != null)
+      return $s;
+    return [];//return empty array if DB request failed
+  }
+
+  public function getUser($id){
+    //call the executePDO method
+    $s = $this->executePDO("SELECT * FROM Users WHERE id = :id", ["id"=>$id]);
+    if($s != null)
+      return $s;
+    return [];//return empty array if DB request failed  
+  }
+
+}
+```
+
+### Views
+
+### Logging
+
+### Extra
+
+#### Form validation
+
+#### Caching
+
+#### Maintenance mode
