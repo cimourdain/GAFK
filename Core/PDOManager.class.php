@@ -10,7 +10,6 @@ abstract class PDOManager{
 
     public function __construct($logger = null){
         $this->setLogger($logger);
-        self::connect_db();
     }
 
     /* Method to connect DB */
@@ -42,6 +41,10 @@ abstract class PDOManager{
 
     /* Method to execute PDO request (with try/catch) */
     protected function executePDO($sql, $data = []){
+      //connect to DB if not already done
+      if(!self::isConnected())
+        self::connect_db();
+
       if(self::isConnected()){
         try{
             if(empty($data))
