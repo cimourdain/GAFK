@@ -339,6 +339,33 @@ getFieldAsHashedPassword() | password value | get hashed value of a password
 checkFieldFormat() | field name, format array | check field format, see details below
 checkFieldsFormat() | format array | check multiple fields format, see details below
 
+Methods checkFieldFormat() and checkFieldsFormat() take arrays of key/values as a format parameter. These array of format allow to centralize field checking.
+
+Usage example in a controller method to check a login and a password field:
+```php
+<?php
+
+//format login and password keys are the fields name in $_POST
+$fields_format = ["login" => ["min" => 3, "max" => 10], "login" => ["min" => 8, "max" => 16]];
+
+//instaciate a new controller
+$fv = new \Core\FormValidator();
+if($fv->formSubmitted() && checkFieldFormat($fields_format))
+  //call model applying getFieldValueSecure() on fields
+}
+
+?>
+```php
+
+Details of available controls in format
+
+Name | Parameter | Description
+------------ | -------------
+Min | (int) | Check if field length is strictly superior to parameter
+Max | (int) | Check if field length is strictly inferior to parameter
+Email | true | Check if field has an email format
+Identical | other_field_name | Check if field content is identical to other_field value
+Int | true | Check that field is an int
 
 #### Caching
 
