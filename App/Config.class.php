@@ -23,6 +23,13 @@ class Config{
     const DB_PORT = '3306';
     const DB_CHARSET = 'utf8';
 
+
+    /* Logging types and values */
+    const LOG_TYPES  =  ["success", "info", "error"];
+    const LOG_TYPE_DEFAULT = "info";
+    const LOG_LEVELS = ["user", "dev"];
+    const LOG_LEVEL_DEFAULT = "info";
+
     /* Error (url non resolved by route) controller, action, params & cache duraction*/
     const ERROR_CONTROLLER_NAME = "Error";
     const ERROR_CONTROLLER_ACTION = "Index";

@@ -258,26 +258,35 @@ in the controller, the following code allow to inject and render
 ```
 <?php
   protected function before(){
-      \Core\Template::setStatic("site_name", "My site name");//you can use the config value of course
+      \Core\Template::setStatic("site_name", App\Config::SITE_NAME);
   }
 
   function executeIndex(){
+    //get user data with a model
     $am = new \App\Model\PDOArticlesManager();
     $articles = $um->getAllArticles();
 
+    //inject articles array into template
     \Core\Template::setStatic("articles", $articles);
+    //resolve articles.php template & set result of rendering as content (for future resolution of main.php)
     \Core\Template::setStatic("content", \Core\Template::render("pages/articles.php"));
 
   }
 
   protected function after(){
-      this->setHTML(\Core\Template::render("partials/main.php"));//send final rendering to setHTML method
+      //send final rendering to setHTML method
+      this->setHTML(\Core\Template::render("partials/main.php"));
   }
 
 ?>
 ```
 
 ### Logging
+
+Logging is handled by the Core\Logger class. At any point of your controller/models you can add logging messages.
+
+Logging messages can have a 
+
 
 ### Extra
 
