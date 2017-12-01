@@ -356,7 +356,7 @@ if($fv->formSubmitted() && checkFieldFormat($fields_format))
 }
 
 ?>
-```php
+```
 
 Details of available controls in format
 
