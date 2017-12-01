@@ -102,7 +102,7 @@ Notes :
 You will create all controller of your website in the /App/Controllers/ folder. Every controller defined in the Router.json have to be implemented.
 
 . | Folder | File naming | Class naming | Namespace | Inheritance
------------- | -------------
+------------ | -------------  | -------------  | -------------  | -------------  | -------------
 Specification | Controllers have to be placed in App/Controllers | Controllers have to be named with the following format NameController.class.php | Controller must have the same name as the file (without .class.php) | All controllers must be included in the __App\Controllers__ namespace. | Controller must inherit either from the abstract /Core/Controller or from an other controller inheriting from from the abstract /Core/Controller
 Example | App/Controllers | MynewctrlController.class.php | class MynewctrlController {} | namespace App\Controllers; | class MynewctrlController extends \Core\Controller{}
 
