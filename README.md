@@ -207,6 +207,15 @@ class PDOUserManager extends \Core\PDOManager{
 ?>
 ```
 
+Usage of model in controller example:
+```php
+
+$um = new \App\Model\PDOUserManager($this->_logger); // see logging section to unerstand the logging parameter
+$users = $um -> getAllUsers();
+
+```
+
+
 ### Views
 #### Definition
 Views are handled by the Temlpate class (Core/Template.class.php).This class is a "singleton", it cannot be instanced, all its method have to be called in a static way.
