@@ -23,7 +23,10 @@ class Config{
     const DB_PORT = '3306';
     const DB_CHARSET = 'utf8';
 
-    /* Error controller cache duraction*/
+    /* Error (url non resolved by route) controller, action, params & cache duraction*/
+    const ERROR_CONTROLLER_NAME = "Error";
+    const ERROR_CONTROLLER_ACTION = "Index";
+    const ERROR_CONTROLLER_PARAMS = [];
     const ERROR_CONTROLLER_CACHE = 0;
 
 

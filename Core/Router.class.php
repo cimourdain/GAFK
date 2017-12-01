@@ -76,7 +76,7 @@ class Router {
             }
         }
         //return default controller
-        return ["controller" => "Error", "action" => "Index", "params"=>[], "cache_seconds" => \App\Config::ERROR_CONTROLLER_CACHE];
+        return ["controller" => \App\Config::ERROR_CONTROLLER_NAME, "action" => \App\Config::ERROR_CONTROLLER_ACTION, "params"=>  \App\Config::ERROR_CONTROLLER_PARAMS, "cache_seconds" => \App\Config::ERROR_CONTROLLER_CACHE];
     }
 
 }
