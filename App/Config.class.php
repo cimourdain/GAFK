@@ -38,7 +38,7 @@ class Config{
 
 
     /* Maintenance */
-    const MAINTENANCE_ACTIVE = true;
+    const MAINTENANCE_ACTIVE = false;
     const MAINTENANCE_CONTROLLER = "Maintenance";
     const MAINTENANCE_ACTION = "Index";
     const MAINTENANCE_CACHE_DURATION_SECONDS = 20;

@@ -317,8 +317,11 @@ Examples of adding log in your models/controllers:
  ?>
  ```
 
+### Error (404) management
 
-### Extra
+If route cannot be resolved, the Application return the error controller and action. They can be updated in the App/Config file.
+
+### Extra features
 
 The following features can be optionally used.
 
@@ -392,4 +395,12 @@ Example:
 }
 ```
 
+Note: Cached page are stored in files in the App/Cache/ folder. Be sure to enable read/write access to this folder.
+
 #### Maintenance mode
+
+A maintenance mode can be activated to redirect all website page to the maintenance page.
+
+To activate configuration, set MAINTENANCE_ACTIVE paramteter to true in \App\Config file.
+
+Optionnaly you can change the controller and action of the maintenance in configration as well.
