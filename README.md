@@ -164,14 +164,12 @@ Model classes are used to communicate with Database.
 
 In your controllers you can call models. Models are classes stored in /App/Model folder
 
-**Filename**: Model filename is almost free (until it ends with .class.php). It is recommended that you name them with the following pattern:
-(PDO + Name + Manager.class.php) example: PDOTestmodelManager.class.php
+. | Folder | File naming | Class naming | Namespace | Inheritance
+------------ | -------------  | -------------  | -------------  | -------------  | -------------
+Specification |  Model filename is almost free (until it ends with .class.php). It is recommended that you name them with the following pattern:
+(PDO + Name[ as ucfirst] + Manager.class.php) | The model name have to be consistent with the filename | Model class must be included in the namesapce App\Model | Model class must inherit from the Core absract class \Core\PDOManager
+Example | PDOTestmodelManager.class.php | class PDOTestmodelManager{} | namespace App\Model; |class PDOTestmodelManager extends \Core\PDOManager{}
 
-**Namespace**: Model class must be included in the namesapce App\Model
-
-**Naming**: The model name have to be consistent with the filename.
-
-**Inheritance** : Model class must inherit from the Core absract class \Core\PDOManager
 
 **Methods**: Model classes can use the following methods inherited from \Core\PDOManager
 * [static]connect_db(): automatically uses params defined in the /App/Config.class.php, this method is automatically called with the first request executed by the model
