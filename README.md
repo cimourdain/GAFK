@@ -333,6 +333,7 @@ Method | Parameters | Description
 formSubmitted() | (optionnal) Array of field names | check if form was submitted ( =>_POST is empty?)
 fieldSbmitted() | field name | check if field was submitted form was submitted ( =>_POST[field] defined?)
 setPostData() | data array | Can be used to perform validation on another array than $_POST
+resetFormContent() | none | Reset internal array of data of the
 getFieldValue() | field name, (optional) default value | return value of the field (or default if provided)
 getFieldValueSecure() | field name, (optional) default value | return value after trim & htmlentities of the field (or default if provided) [only applied for strings]
 getFieldAsHashedPassword() | password value | get hashed value of a password
