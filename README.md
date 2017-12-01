@@ -361,7 +361,7 @@ if($fv->formSubmitted() && checkFieldFormat($fields_format))
 Details of available controls in format
 
 Name | Parameter | Description
------------- | -------------
+------------ | ------------- | -------------
 Min | (int) | Check if field length is strictly superior to parameter
 Max | (int) | Check if field length is strictly inferior to parameter
 Email | true | Check if field has an email format
