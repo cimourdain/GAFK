@@ -101,13 +101,11 @@ Notes :
 
 You will create all controller of your website in the /App/Controllers/ folder. Every controller defined in the Router.json have to be implemented.
 
-**Naming**:
-* The controller "test" class have to be nammed with the following pattern: TestController (only first letter in uppercase).
-* The controller file will be created with the controller name followed by .class.php. Example TestController.class.php.
+. | Folder | File naming | Class naming | Namespace | Inheritance
+------------ | -------------
+Specification | Controllers have to be placed in App/Controllers | Controllers have to be named with the following format NameController.class.php | Controller must have the same name as the file (without .class.php) | All controllers must be included in the __App\Controllers__ namespace. | Controller must inherit either from the abstract /Core/Controller or from an other controller inheriting from from the abstract /Core/Controller
+Example | App/Controllers | MynewctrlController.class.php | class MynewctrlController {} | namespace App\Controllers; | class MynewctrlController extends \Core\Controller{}
 
-**Namepace** : All controllers must be included in the __App\Controllers__ namespace.
-
-**Inheritance** : All your controllers class will inherit from the abstract /Core/Controller class.
 
 **Methods**:
 * Controllers have to implements execute methods for every action defined in the Router. For each action, create a method with the following naming convention "execute+(action name with first letter in uppercase)" example: __executeMyaction()__
@@ -124,7 +122,7 @@ Basic example of controller initalization:
 
 namespace App\Controllers;
 
-class TestController extends AppController{
+class TestController extends \Core\Controller{
 
   /* Execute action Index */
   protected function executeIndex($params = null){
@@ -185,7 +183,7 @@ In your controllers you can call models. Models are classes stored in /App/Model
 Basic example of Model
 
 File: App/Model/PDOUserManager.class.php
-```
+```php
 <?php
 namespace App\Model;
 
@@ -226,7 +224,7 @@ Note: Template files have to be created in the App/Views/ folder
 If the two following template files are created
 
 App/Views/pages/articles.php
-```
+```php
 <h1>Article list</h1>
 
 <?php
@@ -239,7 +237,7 @@ foreach($articles as $a){
 ```
 
 App/Views/partials/main.php
-```
+```php
 <html>
 <head>
 </head>
@@ -255,7 +253,7 @@ App/Views/partials/main.php
 
 in the controller, the following code allow to inject and render
 
-```
+```php
 <?php
   protected function before(){
       \Core\Template::setStatic("site_name", App\Config::SITE_NAME);
@@ -288,7 +286,7 @@ Logging is handled by the Core\Logger class. At any point of your controller/mod
 Log messages are defined with a type (eg. error, success, ...) and a level (eg. dev, user, ...). Types and levels can be updated in the config file.
 
 Examples of adding log in your models/controllers:
- ```
+ ```php
  <?php
  $this->addMessage("My message"); //default type and level will be applied
  $this->addMessage("My message", "error", "dev");
@@ -298,7 +296,7 @@ Examples of adding log in your models/controllers:
  All log messages are stored in an array in the Logger class. Messages can be fetched in array form, pretty array printing or in html form.
 
  Examples of usage:
- ```
+ ```php
  <?php
 
  $messages = $this->getMessages(); //fetch all messages in an array
@@ -308,11 +306,14 @@ Examples of adding log in your models/controllers:
 
  $messages_html = $messages = $this->getMessagesHTML(["success","errors"], ["user"]); //get messages in a string as HTML format
  \Core\Template::("messages",  $messages_html );//messages array can be used in your templates
+
  ?>
  ```
 
 
 ### Extra
+
+
 
 #### Form validation
 
