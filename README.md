@@ -285,7 +285,31 @@ in the controller, the following code allow to inject and render
 
 Logging is handled by the Core\Logger class. At any point of your controller/models you can add logging messages.
 
-Logging messages can have a 
+Log messages are defined with a type (eg. error, success, ...) and a level (eg. dev, user, ...). Types and levels can be updated in the config file.
+
+Examples of adding log in your models/controllers:
+ ```
+ <?php
+ $this->addMessage("My message"); //default type and level will be applied
+ $this->addMessage("My message", "error", "dev");
+ ?>
+ ```
+
+ All log messages are stored in an array in the Logger class. Messages can be fetched in array form, pretty array printing or in html form.
+
+ Examples of usage:
+ ```
+ <?php
+
+ $messages = $this->getMessages(); //fetch all messages in an array
+ \Core\Template::("messages_array", $messages);//messages array can be used in your templates
+
+ $this->prettyPrintMessages(["error", "info"], ["dev"]);//print a pretty formatted array of logs
+
+ $messages_html = $messages = $this->getMessagesHTML(["success","errors"], ["user"]); //get messages in a string as HTML format
+ \Core\Template::("messages",  $messages_html );//messages array can be used in your templates
+ ?>
+ ```
 
 
 ### Extra
