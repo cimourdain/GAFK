@@ -358,7 +358,7 @@ if($fv->formSubmitted() && checkFieldFormat($fields_format))
 ?>
 ```
 
-Details of available controls in format
+Details of available controls in format (casing of control name is irrelevant)
 
 Name | Parameter | Description
 ------------ | ------------- | -------------
@@ -369,5 +369,27 @@ Identical | other_field_name | Check if field content is identical to other_fiel
 Int | true | Check that field is an int
 
 #### Caching
+
+Caching can easily been activated simply by adding the cache duration (field "cache_seconds") of pages in the routes.json
+
+Example:
+
+```javascript
+{
+  //uncached page
+  "home": {
+    "regex_pattern": "/?",
+    "controller": "main",
+    "action": "Index"
+  },
+  //cached page for 20 seconds
+  "page2": {
+    "regex_pattern": "/page2/(\\w*)/?",
+    "controller": "main",
+    "action": "page2",
+    "cache_seconds" : "20"
+  }
+}
+```
 
 #### Maintenance mode
