@@ -320,9 +320,25 @@ Examples of adding log in your models/controllers:
 
 ### Extra
 
-
+The following features can be optionally used.
 
 #### Form validation
+
+In your controllers you can use the Formvalidator provided in Core.
+
+After instanciation, the form validator provide the following methods
+
+Method | Parameters | Description
+------------ | ------------- | -------------
+formSubmitted() | (optionnal) Array of field names | check if form was submitted ( =>_POST is empty?)
+fieldSbmitted() | field name | check if field was submitted form was submitted ( =>_POST[field] defined?)
+setPostData() | data array | Can be used to perform validation on another array than $_POST
+getFieldValue() | field name, (optional) default value | return value of the field (or default if provided)
+getFieldValueSecure() | field name, (optional) default value | return value after trim & htmlentities of the field (or default if provided) [only applied for strings]
+getFieldAsHashedPassword() | password value | get hashed value of a password
+checkFieldFormat() | field name, format array | check field format, see details below
+checkFieldsFormat() | format array | check multiple fields format, see details below
+
 
 #### Caching
 
