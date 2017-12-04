@@ -13,6 +13,40 @@
   <label>Field min size: 3, max size: 6 </label>
   <input type="text" name="test_form_min_max" value="<?php echo $test_form_min_max; ?>"/>
 </div>
+<div class="form_row">
+  <label>Optionnal field (checked only if not empty)</label>
+  <input type="text" name="test_optionnal" value="<?php echo $test_optionnal; ?>"/>
+</div>
+<div class="form_row">
+  <label>Country code (2 Char)</label>
+  <input type="text" name="test_exact_size" value="<?php echo $test_exact_size; ?>"/>
+</div>
+<div class="form_row">
+  <label>Optionnal if coutry code != "US", else size must be 5</label>
+  <input type="text" name="test_optionnalif" value="<?php echo $test_optionnalif; ?>"/>
+</div>
+
+<div class="form_row">
+  <label>Alpha</label>
+  <input type="text" name="test_alpha" value="<?php echo $test_alpha; ?>"/>
+</div>
+<div class="form_row">
+  <label>AlphaNum</label>
+  <input type="text" name="test_alphanum" value="<?php echo $test_alphanum; ?>"/>
+</div>
+<div class="form_row">
+  <label>Numeric</label>
+  <input type="text" name="test_numeric" value="<?php echo $test_numeric; ?>"/>
+</div>
+<div class="form_row">
+  <label>Int</label>
+  <input type="text" name="test_int" value="<?php echo $test_int; ?>"/>
+</div>
+<div class="form_row">
+  <label>Secure (min 2 uppercases, 3 digits and 1 special char)</label>
+  <input type="text" name="test_secure" value="<?php echo $test_secure; ?>"/>
+</div>
+
 <div class="form_row_center">
   <input type="submit" value="submit form" />
 </div>
