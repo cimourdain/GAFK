@@ -73,7 +73,7 @@ class FormValidator{
         foreach($format["optionnalif"] as $field_to_check => $values_to_check){
           if(is_array($values_to_check)){
             if(!$this->fieldSubmitted($field_to_check) || in_array($this->getFieldValue($field_to_check), $values_to_check)){
-              \Core\Logger::AddMessage("Field ".$field." is optionnal");
+              //\Core\Logger::AddMessage("Field ".$field." is optionnal");
               return true;
             }
           }
@@ -86,7 +86,11 @@ class FormValidator{
 
     /* check if field is empty */
     protected function fieldIsEmpty($field){
-      if(isset($this->_data[$field]) && (empty($this->_data[$field]) || strlen($this->_data[$field]) <= 0))
+      if(isset($this->_data[$field]) &&
+            (empty($this->_data[$field]) ||
+              ((!is_array($this->_data[$field]) && strlen($this->_data[$field]) <= 0) || (is_array($this->_data[$field]) && count($this->_data[$field]) <= 0))
+            )
+        )
         return true;
       //\Core\Logger::AddMessage("Field ".$field." is not empty(".$this->data[$field].")".strlen($this->data[$field]).".", "info", "dev");
       return false;
@@ -290,51 +294,95 @@ class FormValidator{
     /******************************************
     *****************  CHECK IMAGE ***********
     ******************************************/
-
-    /* function to check img upload */
-    /*public function checkImageUpload($field, $format){
-      if(isset($_FILES[$field])){
-        $target_dir = $format["target_dir"];
-        $target_file = $target_dir . basename($_FILES[$field]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-        if(isset($format["target_file_name"]))
-        $target_file = $target_dir . date("YmdHis-") . $format["target_file_name"].".".$imageFileType;
-
-        $isImage = getimagesize($_FILES[$field]["tmp_name"]);
-        if($isImage !== false) {
-          if($_FILES[$field]["size"] <= $format["max_size"]){
-            if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif"){
-              \Core\FilesManager::createDirIfDoesNotExists($target_dir);
-              \Core\FilesManager::deleteAllFromDir($target_dir);
-
-              if (move_uploaded_file($_FILES[$field]["tmp_name"], $target_file))
-                return $target_file;
-              else
-                \Core\Logger::AddMessage("Sorry, there was an error uploading your file.", "error", "user");
-            }
-            else
-            \Core\Logger::AddMessage("Only png, jpg, jpeg and gif are allowed, the image given was regognised as \"".$imageFileType."\".", "error", "user");
-          }
-          else
-          \Core\Logger::AddMessage("File is too large, max file size is ".$_FILES[$field]["size"]." and product size is ".$format["max_size"].".", "error", "user");
-        }
-        else
-          \Core\Logger::AddMessage("File is not an image.", "error", "user");
-      }else{
-        \Core\Logger::AddMessage("Image not submitted.", "error", "user");
-      }
-
+    /* check field in $_FILES data */
+    protected function checkFileFieldArray($field){
+      if(isset($this->_data[$field]["name"]) && isset($this->_data[$field]["tmp_name"]))
+        return true;
+      \Core\Logger::AddMessage("Invalid file received for field ".$field.".", "error", "dev");
       return false;
-    }*/
-
-    protected function getErrMsg($field, $default){
-      foreach($this->_format as $fi => $fo){
-        if($fi == $field && isset($fo["user_message"]) && !empty($fo["user_message"]))
-          return $fo["user_message"];
-      }
-      return $default;
     }
+
+    /* check format given by controller for this field */
+    protected function checkFileFieldFormat($format){
+      if(isset($format["target_dir"]) && isset($format["max_size"]))
+        return true;
+      \Core\Logger::AddMessage("Image file directory not defined or max size not defined.", "error", "dev");
+      return false;
+    }
+
+    /* build target path */
+    protected function getFileDirectory($format){
+      $target_dir_path = __DIR__."/../".$format["target_dir"];
+      if(is_dir($target_dir_path) || mkdir($target_dir_path)){
+        return $target_dir_path;
+      }
+      \Core\Logger::AddMessage("Upload directory ".$target_dir_path." does not exists.", "error", "dev");
+      return "";
+    }
+
+    /* build target file name */
+    protected function getTargetFileName($field, $format, $target_dir_path){
+      //set date as filename prefix if necessary
+      $name_prefix = "";
+      if(isset($format["date_prefix"]))
+        $name_prefix = date("YmdHis-");
+
+      $file_pathinfo = pathinfo($this->_data[$field]["name"]);
+      //var_dump($file_pathinfo);
+      //define target filename
+      if(isset($format["target_file_name"]))
+        return $target_dir_path. "/" . $name_prefix . $format["target_file_name"].".".$file_pathinfo["extension"];
+      else
+        return $target_dir_path. "/" . $name_prefix . basename($this->_data[$field]["name"]);
+    }
+
+    /* check if uploaded file is an image */
+    protected function checkIfImage($field, $format){
+      if(!empty($this->_data[$field]["tmp_name"]) && getimagesize($this->_data[$field]["tmp_name"]) !== false)
+        return true;
+      \Core\Logger::AddMessage("File uploaded is not an image.", "error", "dev");
+      return false;
+    }
+
+    /* check uploaded file extension */
+    protected function checkFileExtension($field, $format, $target_file){
+      $file_extension = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+      if(isset($format["allowed_extensions"]) && in_array($file_extension, $format["allowed_extensions"]))
+        return true;
+      else if(!isset($format["allowed_extensions"]) && $this->checkIfImage($field, $format) && in_array($file_extension, ["jpg", "jpeg", "png", "gif", "bmp"]))
+        return true;
+      \Core\Logger::AddMessage("Invalid format for file: ".$file_extension, "error", "dev");
+      return false;
+    }
+
+    /* check uploaded file size */
+    protected function checkFileSize($field, $format){
+      if($this->_data[$field]["size"] <= $format["max_size"])
+        return true;
+      \Core\Logger::AddMessage("Invalid file size, max size is ".$format["max_size"]." and your file is ".$this->_data[$field]["size"].".", "error", "dev");
+      return false;
+    }
+
+    /* check uploaded file */
+    protected function checkUpload($field, $format){
+      if($this->checkFileFieldArray($field)
+        && $this->checkFileFieldFormat($format)
+        && ($target_dir_path = $this->getFileDirectory($format)) != ""
+        && ($target_file = $this->getTargetFileName($field, $format, $target_dir_path)) != ""
+        && $this->checkFileExtension($field, $format, $target_file)
+        && $this->checkFileSize($field, $format))
+        {
+          if(isset($format["clean_dir_before_add"]))
+            \Core\FilesManager::deleteAllFromDir($target_dir_path);
+
+          if (move_uploaded_file($this->_data[$field]["tmp_name"], $target_file))
+            return true;
+          else
+            \Core\Logger::AddMessage("Sorry, there was an error uploading your file.", "error", "user");
+        }
+      return false;
+    }
+
 
     /* reset content of form */
     public function resetFormContent(){
@@ -377,6 +425,14 @@ class FormValidator{
             'salt' => mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)
         ];
         return password_hash($pass, PASSWORD_BCRYPT, $options);
+    }
+
+    protected function getErrMsg($field, $default){
+      foreach($this->_format as $fi => $fo){
+        if($fi == $field && isset($fo["user_message"]) && !empty($fo["user_message"]))
+          return $fo["user_message"];
+      }
+      return $default;
     }
 
 }

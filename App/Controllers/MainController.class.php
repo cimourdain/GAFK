@@ -19,9 +19,11 @@ class MainController extends AppController{
 
   /* Execute form page */
   protected function executeFormtest($params = null){
-    $fv = new \Core\FormValidator();
+    $post_fv = new \Core\FormValidator();
+    $files_fv = new \Core\FormValidator();
+    $files_fv->setData($_FILES);
 
-    $fields_format = ["test_form_min" => [ "min" => 3 ],
+    $fields_post_format = ["test_form_min" => [ "min" => 3 ],
                       "test_form_max" => [ "max" => 4 ],
                       "test_form_min_max" => [  "min" => 3, "max" => 6 ],
                       "test_optionnal" => [  "optionnal" => true, "min" => 3 ],
@@ -35,11 +37,19 @@ class MainController extends AppController{
                       "test_date" => ["date" => ["format" => "Y/m/d"]],
                       "test_daterange" => ["date" => ["format" => "Y-m-d", "after" => "2016-07-15", "before" => "2017-11-15"]],
                       "test_hexcolor" => ["hexcolor" => true, "user_message" => "wrong hexa color"],
-                      "test_inlist" => ["inlist" => ["blue", "red"]]
+                      "test_inlist" => ["inlist" => ["blue", "red"]],
+                      "test_password" => ["min" => 3, "max" => 6 ],
+                      "test_password_conf" => ["identical"=>"test_password"]
                       ];
+    $fields_files_format = ["test_image" => ["upload" => ["target_dir" => "img",
+                                                          "max_size" => 50000,
+                                                          "target_file_name" => "toto",
+                                                          "allowed_extensions" => ["png"],
+                                                          "date_prefix" => true]]];
 
-    if($fv->formSubmitted() && $fv->checkFieldsFormat($fields_format))
-      \Core\Logger::AddMessage("form is ok", "success", "user");
+    if($post_fv->formSubmitted() && $post_fv->checkFieldsFormat($fields_post_format) && $files_fv->checkFieldsFormat($fields_files_format)){
+      \Core\Logger::AddMessage("post & files data ok", "success", "user");
+    }
     else
       \Core\Logger::AddMessage("please check fields");
 
@@ -49,22 +59,24 @@ class MainController extends AppController{
     \Core\Template::setStatic("messages_html", \Core\Template::render("partials/messages.html"));
 
     //set fields content
-    \Core\Template::setStatic("test_form_min", $fv->getFieldValueSecure("test_form_min", ""));
-    \Core\Template::setStatic("test_form_max", $fv->getFieldValueSecure("test_form_max", ""));
-    \Core\Template::setStatic("test_form_min_max", $fv->getFieldValueSecure("test_form_min_max", ""));
-    \Core\Template::setStatic("test_optionnal", $fv->getFieldValueSecure("test_optionnal", ""));
-    \Core\Template::setStatic("test_exact_size", $fv->getFieldValueSecure("test_exact_size", ""));
-    \Core\Template::setStatic("test_optionnalif", $fv->getFieldValueSecure("test_optionnalif", ""));
-    \Core\Template::setStatic("test_alpha", $fv->getFieldValueSecure("test_alpha", ""));
-    \Core\Template::setStatic("test_alphanum", $fv->getFieldValueSecure("test_alphanum", ""));
-    \Core\Template::setStatic("test_numeric", $fv->getFieldValueSecure("test_numeric", ""));
-    \Core\Template::setStatic("test_int", $fv->getFieldValueSecure("test_int", ""));
-    \Core\Template::setStatic("test_secure", $fv->getFieldValueSecure("test_secure", ""));
-    \Core\Template::setStatic("test_date", $fv->getFieldValueSecure("test_date", ""));
-    \Core\Template::setStatic("test_daterange", $fv->getFieldValueSecure("test_daterange", ""));
-    \Core\Template::setStatic("test_hexcolor", $fv->getFieldValueSecure("test_hexcolor", ""));
-    \Core\Template::setStatic("test_hexcolor", $fv->getFieldValueSecure("test_hexcolor", ""));
-    \Core\Template::setStatic("test_inlist", $fv->getFieldValueSecure("test_inlist", ""));
+    \Core\Template::setStatic("test_form_min", $post_fv->getFieldValueSecure("test_form_min", ""));
+    \Core\Template::setStatic("test_form_max", $post_fv->getFieldValueSecure("test_form_max", ""));
+    \Core\Template::setStatic("test_form_min_max", $post_fv->getFieldValueSecure("test_form_min_max", ""));
+    \Core\Template::setStatic("test_optionnal", $post_fv->getFieldValueSecure("test_optionnal", ""));
+    \Core\Template::setStatic("test_exact_size", $post_fv->getFieldValueSecure("test_exact_size", ""));
+    \Core\Template::setStatic("test_optionnalif", $post_fv->getFieldValueSecure("test_optionnalif", ""));
+    \Core\Template::setStatic("test_alpha", $post_fv->getFieldValueSecure("test_alpha", ""));
+    \Core\Template::setStatic("test_alphanum", $post_fv->getFieldValueSecure("test_alphanum", ""));
+    \Core\Template::setStatic("test_numeric", $post_fv->getFieldValueSecure("test_numeric", ""));
+    \Core\Template::setStatic("test_int", $post_fv->getFieldValueSecure("test_int", ""));
+    \Core\Template::setStatic("test_secure", $post_fv->getFieldValueSecure("test_secure", ""));
+    \Core\Template::setStatic("test_date", $post_fv->getFieldValueSecure("test_date", ""));
+    \Core\Template::setStatic("test_daterange", $post_fv->getFieldValueSecure("test_daterange", ""));
+    \Core\Template::setStatic("test_hexcolor", $post_fv->getFieldValueSecure("test_hexcolor", ""));
+    \Core\Template::setStatic("test_hexcolor", $post_fv->getFieldValueSecure("test_hexcolor", ""));
+    \Core\Template::setStatic("test_inlist", $post_fv->getFieldValueSecure("test_inlist", ""));
+    \Core\Template::setStatic("test_password", $post_fv->getFieldValueSecure("test_password", ""));
+    \Core\Template::setStatic("test_password_conf", $post_fv->getFieldValueSecure("test_password_conf", ""));
 
     //render in template
     \Core\Template::setStatic("content", \Core\Template::render("pages/main/form_test.html"));

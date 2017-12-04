@@ -1,6 +1,6 @@
 <h2>Test form validation</h2>
 <?php echo $messages_html; ?>
-<form id="form_test" action="<?php echo $base_url; ?>form/" method="post">
+<form id="form_test" action="<?php echo $base_url; ?>form/" method="post" enctype="multipart/form-data">
 <div class="form_row">
   <label>Field min size: 3 </label>
   <input type="text" name="test_form_min" value="<?php echo $test_form_min; ?>"/>
@@ -65,6 +65,21 @@
 <div class="form_row">
   <label>Type "blue" or "red"</label>
   <input type="text" name="test_inlist" value="<?php echo $test_inlist; ?>"/>
+</div>
+
+<div class="form_row">
+  <label>Password</label>
+  <input type="password" name="test_password" value="<?php echo $test_password; ?>"/>
+</div>
+
+<div class="form_row">
+  <label>Confirm Password</label>
+  <input type="password" name="test_password_conf" value="<?php echo $test_password_conf; ?>"/>
+</div>
+
+<div class="form_row">
+  <label>Upload image</label>
+  <input type="file" name="test_image" value="<?php echo $test_image; ?>"/>
 </div>
 
 <div class="form_row_center">

@@ -383,6 +383,7 @@ hexcolor | true | Check if field is a valid hex color value
 inlist | [values] | Check if field value is in [values] list
 user_message | (str) | Value of custom message when field is invalid
 Date | Array() | Check if date match format of parameter, see table below
+Upload | Array() | Check uploaded files, see table below
 
 Detail of date format array
 
@@ -391,6 +392,16 @@ key | value | Description
 format | str | required date format (mandatory), ex: 'Y-m-d'
 after | date in format 'Y-m-d' | the field date value must be after parameter date
 bofore | date in format 'Y-m-d' | the field date value must be before parameter date
+
+
+Detail of upload file format array
+key | mandatory | value | Description
+------------ | ------------ | ------------- | -------------
+target_dir | yes | dir namae | Directory path from website root
+max_size | yes | max file size | Max file size
+target_file_name | no | string | Name of file after upload
+date_prefix | no | true | If defined, the filename is prefixed with DateTime
+allowed_extensions | no | Array conaining list of allowed extensions for file
 
 #### Caching
 
