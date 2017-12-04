@@ -10,6 +10,11 @@
     "action": "page2",
     "cache_seconds" : "20"
   },
+  "form_test": {
+    "regex_pattern": "/form/?",
+    "controller": "main",
+    "action": "formtest"
+  },
   "admin": {
     "regex_pattern": "/second_ctrl/?",
     "controller": "second",

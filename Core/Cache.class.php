@@ -43,7 +43,7 @@ class Cache{
   }
 
   protected function setCacheFile(){
-    if($folder = $this->getCacheFolder()){
+    if($this->isCacheRequired() && $folder = $this->getCacheFolder()){
       $file_path = $folder.'/'.$this->getCacheFileName();
       $this->addMessage("Check if cache file ".$file_path." exists.", "info", "dev");
       //$this->addMessage("Cache file age ".(time() - date (filemtime($file_path)))." seconds");

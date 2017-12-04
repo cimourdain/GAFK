@@ -1,0 +1,19 @@
+<h2>Test form validation</h2>
+<?php echo $messages_html; ?>
+<form id="form_test" action="<?php echo $base_url; ?>form/" method="post">
+<div class="form_row">
+  <label>Field min size: 3 </label>
+  <input type="text" name="test_form_min" value="<?php echo $test_form_min; ?>"/>
+</div>
+<div class="form_row">
+  <label>Field max size: 4 </label>
+  <input type="text" name="test_form_max" value="<?php echo $test_form_max; ?>"/>
+</div>
+<div class="form_row">
+  <label>Field min size: 3, max size: 6 </label>
+  <input type="text" name="test_form_min_max" value="<?php echo $test_form_min_max; ?>"/>
+</div>
+<div class="form_row_center">
+  <input type="submit" value="submit form" />
+</div>
+</form>

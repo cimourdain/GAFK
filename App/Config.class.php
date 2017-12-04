@@ -28,7 +28,7 @@ class Config{
     const LOG_TYPES  =  ["success", "info", "error"];
     const LOG_TYPE_DEFAULT = "info";
     const LOG_LEVELS = ["user", "dev"];
-    const LOG_LEVEL_DEFAULT = "info";
+    const LOG_LEVEL_DEFAULT = "dev";
 
     /* Error (url non resolved by route) controller, action, params & cache duraction*/
     const ERROR_CONTROLLER_NAME = "Error";
