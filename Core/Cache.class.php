@@ -3,13 +3,10 @@
 namespace Core;
 
 class Cache{
-  use TLoggedClass;
-
   protected $_route = [];
   protected $_cache_file = null;
 
-  public function __construct($route, $logger){
-    $this->setLogger($logger);
+  public function __construct($route){
     $this->setRoute($route);
     $this->setCacheFile();
   }
@@ -28,7 +25,7 @@ class Cache{
     $folder = __DIR__."/../App/Cache/".$this->_route["controller"];
     if(!is_dir($folder)){
       if(!mkdir($folder, 0777, true)){
-        $this->addMessage("Impossible to create cache folder, check permissions", "error", "dev");
+        \Core\Logger::addMessage("Impossible to create cache folder, check permissions", "error", "dev");
         return null;
       }
     }
@@ -45,10 +42,10 @@ class Cache{
   protected function setCacheFile(){
     if($this->isCacheRequired() && $folder = $this->getCacheFolder()){
       $file_path = $folder.'/'.$this->getCacheFileName();
-      $this->addMessage("Check if cache file ".$file_path." exists.", "info", "dev");
-      //$this->addMessage("Cache file age ".(time() - date (filemtime($file_path)))." seconds");
+      \Core\Logger::addMessage("Check if cache file ".$file_path." exists.", "info", "dev");
+      //\Core\Logger::addMessage("Cache file age ".(time() - date (filemtime($file_path)))." seconds");
       if(file_exists($file_path) && (time() - date (filemtime($file_path))) < $this->_route["cache_seconds"]){
-          $this->addMessage("Cache file ".$file_path." exists.", "info", "dev");
+          \Core\Logger::addMessage("Cache file ".$file_path." exists.", "info", "dev");
           $this->_cache_file = $file_path;
           return;
         }
@@ -58,7 +55,7 @@ class Cache{
 
   public function isCacheAvailable(){
     if($this->_cache_file != null ){
-      $this->addMessage("Cache file available.", "info", "dev");
+      \Core\Logger::addMessage("Cache file available.", "info", "dev");
       return true;
     }
     return false;
@@ -70,7 +67,7 @@ class Cache{
   }
 
   public function updateCache($html){
-    $this->addMessage("Update cache file.", "info", "dev");
+    \Core\Logger::addMessage("Update cache file.", "info", "dev");
     if($folder = $this->getCacheFolder()){
       try{
         $file_path = $folder.'/'.$this->getCacheFileName();

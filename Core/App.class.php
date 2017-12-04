@@ -3,14 +3,10 @@
 namespace Core;
 
 class App{
-    use TLoggedClass;
 
     public function __construct(){
-        //define logger
-        $this->setLogger(new Logger());
-
         //analyse url with router
-        $router = new Router($this->_logger);
+        $router = new Router();
 
         if(\App\Config::MAINTENANCE_ACTIVE)
           $this->launchController(["controller" => \App\Config::MAINTENANCE_CONTROLLER, "action" => \App\Config::MAINTENANCE_ACTION, "params" => [], "cache_seconds" => \App\Config:: MAINTENANCE_CACHE_DURATION_SECONDS]);
@@ -24,17 +20,17 @@ class App{
     private function launchController($route){
       if(!empty($route) && isset($route["controller"]) && isset($route["action"]) && isset($route["params"]) && class_exists(($controllerClassName = "\App\Controllers\\" . $route["controller"] . "Controller"))) {
           //instanciate cache
-          $cache = new \Core\Cache($route, $this->_logger);
+          $cache = new \Core\Cache($route);
           //call controller if no cached version to render
           if(!$this->getCachedView($cache, $route)){
-            $this->addMessage("Enter controller ".$controllerClassName, "info", "dev");
-            $c = new $controllerClassName($route, $this->_logger);
+            \Core\Logger::addMessage("Enter controller ".$controllerClassName, "info", "dev");
+            $c = new $controllerClassName($route);
             $c->execute($cache);
           }
       }
       else{
-        $this->addMessage("Invalid or empty route", "error", "dev");
-        $this->prettyPrintMessages();
+        \Core\Logger::addMessage("Invalid or empty route", "error", "dev");
+        \Core\Logger::prettyPrintMessages();
         throw new \Exception ("Invalid or empty route");
       }
     }

@@ -3,16 +3,13 @@
 namespace Core;
 
 abstract class Controller{
-  use TLoggedClass;
-
   protected $_action = null;
   protected $_params = array();
   protected $_html = "";
 
   /* Build controller with action & route params */
-  public function __construct($route, $logger = null){
-    $this->setLogger($logger);
-    $this->addMessage("Enter controller", "info", "dev");
+  public function __construct($route){
+    \Core\Logger::addMessage("Enter controller", "info", "dev");
     $this->setAction($route["action"]);
     $this->setParams($route["params"]);
 
@@ -37,7 +34,7 @@ abstract class Controller{
 
   //render : set HTML output to cache if necessary && render output
   protected function render($cache = null){
-    $this->addMessage("Update cache file", "info", "dev");
+    \Core\Logger::addMessage("Update cache file", "info", "dev");
     if($cache != null && $cache->isCacheRequired() && !$cache->isCacheAvailable())
       $cache->updateCache($this->getHTML());
 

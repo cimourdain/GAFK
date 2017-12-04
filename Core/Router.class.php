@@ -3,12 +3,8 @@
 namespace Core;
 
 class Router {
-    use TLoggedClass;
-
     private $_routes = array();
-
-    public function __construct($logger = null){
-      $this->setLogger($logger);
+    public function __construct(){
       $this->importRoutes();
     }
 
@@ -28,19 +24,19 @@ class Router {
             $route["cache_seconds"] = $this->getCacheDuration($route);
             array_push( $this->_routes, $route);
           }else
-            $this->addMessage("Cannot add pattern ".$route_name." : ".implode(",", $route), "error", "dev");
+            \Core\Logger::addMessage("Cannot add pattern ".$route_name." : ".implode(",", $route), "error", "dev");
         }
 
         if(empty($this->_routes)){
-          $this->addMessage("No route found in application.", "error", "dev");
-          $this->prettyPrintMessages();
+          \Core\Logger::addMessage("No route found in application.", "error", "dev");
+          \Core\Logger::prettyPrintMessages();
           throw new \Exception("No route found in application.");
         }
       }
       catch(\Exception $e)
       {
-        $this->addMessage("Impossible to fetch routes from URL".$e->getMessage(), "error", "dev");
-        $this->prettyPrintMessages();
+        \Core\Logger::addMessage("Impossible to fetch routes from URL".$e->getMessage(), "error", "dev");
+        \Core\Logger::prettyPrintMessages();
         throw new \Exception("Impossible to fetch routes from URL".$e->getMessage());
       }
     }

@@ -4,12 +4,9 @@ namespace Core;
 use PDO;
 
 abstract class PDOManager{
-    use TLoggedClass;
-
     protected static $_pdo = null;
 
-    public function __construct($logger = null){
-        $this->setLogger($logger);
+    public function __construct(){
     }
 
     /* Method to connect DB */
@@ -23,7 +20,7 @@ abstract class PDOManager{
             ];
 
             self::$_pdo = new \PDO($dsn, \App\Config::DB_USER, \App\Config::DB_PASSWORD, $opt);
-            $this->addMessage("Connection to DB successful.", "success", "dev");
+            \Core\Logger::addMessage("Connection to DB successful.", "success", "dev");
         }
         catch (PDOException $e) {
             error_log($e->getMessage()."\n", 3, \App\Config::ERROR_LOG_FILE);
@@ -57,11 +54,11 @@ abstract class PDOManager{
         }
         catch (PDOException $e) {
             error_log($e->getMessage()."\n", 3, \App\Config::ERROR_LOG_FILE);
-            $this->addMessage("Error performing request in DB ".$e->getMessage(), "error", "dev");
+            \Core\Logger::addMessage("Error performing request in DB ".$e->getMessage(), "error", "dev");
             return null;
         }
       }
-      $this->addMessage("Database not connected", "error", "dev");
+      \Core\Logger::addMessage("Database not connected", "error", "dev");
       return null;
     }
 }

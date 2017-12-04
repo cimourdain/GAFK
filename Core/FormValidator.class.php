@@ -7,13 +7,11 @@ TO-DO detail file format
 namespace Core;
 
 class FormValidator{
-    use TLoggedClass;
 
     protected $_data = array();
 
-    public function __construct($logger){
+    public function __construct(){
         $this->setData($_POST);
-        $this->setLogger($logger);
     }
 
     /* function to check if POST data where submitted */
@@ -25,7 +23,7 @@ class FormValidator{
                 $all_fields_received = true;
                 foreach($fields as $f){
                     if(!$this->fieldSubmitted($f)){
-                        $this->AddMessage("Field ".$f." not received.");
+                        \Core\Logger::AddMessage("Field ".$f." not received.");
                         $all_fields_received = false;
                     }
                 }
@@ -60,7 +58,7 @@ class FormValidator{
         else if ($this->fieldIsOptionnal($field, $format) && $this->fieldIsEmpty($field))
           return true;
         else
-            $this->AddMessage("Field ".$field." empty or impossible to check.", "error", "user");
+            \Core\Logger::AddMessage("Field ".$field." empty or impossible to check.", "error", "user");
 
         return false;
     }
@@ -73,21 +71,21 @@ class FormValidator{
         foreach($format["optionnalif"] as $field_to_check => $values_to_check){
           if(is_array($values_to_check)){
             if(!$this->fieldSubmitted($field_to_check) || in_array($this->getFieldValue($field_to_check), $values_to_check)){
-              $this->addMessage("Field ".$field." is not optionnal");
+              \Core\Logger::AddMessage("Field ".$field." is not optionnal");
               return false;
             }
           }
         }
         return $valid;
       }
-      //$this->addMessage("Field ".$field." is not optionnal");
+      //\Core\Logger::AddMessage("Field ".$field." is not optionnal");
       return false;
     }
 
     protected function fieldIsEmpty($field){
       if(isset($this->_data[$field]) && (empty($this->_data[$field]) || strlen($this->_data[$field]) <= 0))
         return true;
-      //$this->addMessage("Field ".$field." is not empty(".$this->data[$field].")".strlen($this->data[$field]).".", "info", "dev");
+      //\Core\Logger::AddMessage("Field ".$field." is not empty(".$this->data[$field].")".strlen($this->data[$field]).".", "info", "dev");
       return false;
     }
 
@@ -109,7 +107,7 @@ class FormValidator{
         if(strlen($this->getFieldValue($field)) == $size )
             return true;
         else if($this->loggerDefined())
-            $this->AddMessage("Field ".$field. " must have a size of ".$size." characters.", "error", "user");
+            \Core\Logger::AddMessage("Field ".$field. " must have a size of ".$size." characters.", "error", "user");
         return false;
     }
 
@@ -118,7 +116,7 @@ class FormValidator{
         if(strlen($this->getFieldValue($field)) >= $min )
             return true;
         else if($this->loggerDefined())
-            $this->AddMessage("Field ".$field. " must have a min length of ".$min." characters.", "error", "user");
+            \Core\Logger::AddMessage("Field ".$field. " must have a min length of ".$min." characters.", "error", "user");
         return false;
     }
 
@@ -127,7 +125,7 @@ class FormValidator{
         if(!$this->fieldIsEmpty($field) && strlen($this->getFieldValue($field)) <= $max )
             return true;
         else if($this->loggerDefined())
-            $this->AddMessage("Field ".$field. " must have a max length of ".$max." characters.","error", "user");
+            \Core\Logger::AddMessage("Field ".$field. " must have a max length of ".$max." characters.","error", "user");
 
         return false;
     }
@@ -140,7 +138,7 @@ class FormValidator{
       if(ctype_alpha($this->getFieldValue($field)))
         return true;
         else if($this->loggerDefined())
-            $this->addMessage("Field ".$field." (".$this->getFieldValue($field).") has to be alphabetic.", "error", "user");
+            \Core\Logger::AddMessage("Field ".$field." (".$this->getFieldValue($field).") has to be alphabetic.", "error", "user");
       return false;
     }
 
@@ -149,7 +147,7 @@ class FormValidator{
       if(ctype_alnum($this->getFieldValue($field)))
         return true;
       else if($this->loggerDefined())
-          $this->addMessage("Field ".$field." (".$this->getFieldValue($field).") has to be alphanumeric.", "error", "user");
+          \Core\Logger::AddMessage("Field ".$field." (".$this->getFieldValue($field).") has to be alphanumeric.", "error", "user");
       return false;
     }
 
@@ -158,7 +156,7 @@ class FormValidator{
         if(is_numeric($this->getFieldValue($field)))
           return true;
         else if($this->loggerDefined())
-          $this->addMessage("Field ".$field." (".$this->getFieldValue($field).") has to be numeric.", "error", "user");
+          \Core\Logger::AddMessage("Field ".$field." (".$this->getFieldValue($field).") has to be numeric.", "error", "user");
       return false;
     }
 
@@ -168,7 +166,7 @@ class FormValidator{
         if(is_numeric($this->getFieldValue($field)) && is_int(intval($this->getFieldValue($field))))
           return true;
         else if($this->loggerDefined())
-          $this->addMessage("Field ".$field." (".$this->getFieldValue($field).") has to be an integer.", "error", "user");
+          \Core\Logger::AddMessage("Field ".$field." (".$this->getFieldValue($field).") has to be an integer.", "error", "user");
       return false;
     }
 
@@ -177,7 +175,7 @@ class FormValidator{
         if(filter_var($this->getFieldValue($field), FILTER_VALIDATE_EMAIL))
             return true;
         else if($this->loggerDefined())
-            $this->AddMessage("Invalid email format for field ".$field, "error", "user");
+            \Core\Logger::AddMessage("Invalid email format for field ".$field, "error", "user");
         return false;
     }
 
@@ -186,7 +184,7 @@ class FormValidator{
         if($this->fieldSubmitted($other_field_name) && $this->getFieldValue($field) ==  $this->getFieldValue($other_field_name))
             return true;
         else if($this->loggerDefined())
-          $this->AddMessage("Field ".$field. "  must be identical to ".$other_field_name.".", "error", "user");
+          \Core\Logger::AddMessage("Field ".$field. "  must be identical to ".$other_field_name.".", "error", "user");
         return false;
     }
 
@@ -195,7 +193,7 @@ class FormValidator{
         if(preg_match_all('/[A-Z]/', $this->getFieldValue($field)) >= $nb_uppercase_required)
          return true;
         else if($this->loggerDefined())
-           $this->AddMessage("Field ".$field. " must contain at least".$nb_uppercase_required." upppercases character ".preg_match_all('/[A-Z]/', $this->getFieldValue($field))." given.", "error", "user");
+           \Core\Logger::AddMessage("Field ".$field. " must contain at least".$nb_uppercase_required." upppercases character ".preg_match_all('/[A-Z]/', $this->getFieldValue($field))." given.", "error", "user");
         return false;
     }
 
@@ -204,7 +202,7 @@ class FormValidator{
         if(preg_match_all('/[0-9]/', $this->getFieldValue($field)) >= $nb_digits_required)
           return true;
         else if($this->loggerDefined())
-          $this->AddMessage("Field ".$field. " must contain at least".$nb_digits_required." digits.", "error", "user");
+          \Core\Logger::AddMessage("Field ".$field. " must contain at least".$nb_digits_required." digits.", "error", "user");
         return false;
     }
 
@@ -213,7 +211,7 @@ class FormValidator{
       if(substr_count($this->getFieldValue($field), ' ') <= $nb_allowed_spaces)
         return true;
       else if($this->loggerDefined())
-           $this->AddMessage("Not more than ".$nb_allowed_spaces. "  spaces are allowed in ".$field.".", "error", "user");
+           \Core\Logger::AddMessage("Not more than ".$nb_allowed_spaces. "  spaces are allowed in ".$field.".", "error", "user");
       return false;
     }
 
@@ -242,10 +240,10 @@ class FormValidator{
             foreach($date_format as $check => $value){
               $method = "checkDate".ucfirst(strtolower($check));
               if(!method_exists($this, $method)){
-                  $this->addMessage("Impossible to check ".$check." on date.", "error", "dev");
+                  \Core\Logger::AddMessage("Impossible to check ".$check." on date.", "error", "dev");
                   $valid = false;
               }else if (!$this->isValidDate($value)){
-                $this->addMessage("Impossible to check date for field ".$field.", format not defined.", "error", "dev");
+                \Core\Logger::AddMessage("Impossible to check date for field ".$field.", format not defined.", "error", "dev");
               }
               else{
                 $date_comp = new \DateTime($value);
@@ -255,10 +253,10 @@ class FormValidator{
             }
             return $valid;
           }else{
-            $this->addMessage("Invalid date format for field ".$field.".", "error", "user");
+            \Core\Logger::AddMessage("Invalid date format for field ".$field.".", "error", "user");
           }
         }else{
-          $this->addMessage("Impossible to check date for field ".$field.", format not defined.", "error", "dev");
+          \Core\Logger::AddMessage("Impossible to check date for field ".$field.", format not defined.", "error", "dev");
         }
         return false;
     }
@@ -267,7 +265,7 @@ class FormValidator{
     protected function checkDateBefore($date_field, $date_comp){
       if($date_field < $date_comp)
         return true;
-      $this->addMessage($date_field->format('Y-m-d')." have to be before ".$date_comp->format('Y-m-d').".", "error", "user");
+      \Core\Logger::AddMessage($date_field->format('Y-m-d')." have to be before ".$date_comp->format('Y-m-d').".", "error", "user");
       return false;
     }
 
@@ -275,7 +273,7 @@ class FormValidator{
     protected function checkDateAfter($date_field, $date_comp){
       if($date_field > $date_comp)
         return true;
-      $this->addMessage($date_field->format('Y-m-d')." have to be after ".$date_comp->format('Y-m-d').".", "error", "user");
+      \Core\Logger::AddMessage($date_field->format('Y-m-d')." have to be after ".$date_comp->format('Y-m-d').".", "error", "user");
       return false;
     }
 
@@ -299,18 +297,18 @@ class FormValidator{
               if (move_uploaded_file($_FILES[$field]["tmp_name"], $target_file))
                 return $target_file;
               else
-                $this->addMessage("Sorry, there was an error uploading your file.", "error", "user");
+                \Core\Logger::AddMessage("Sorry, there was an error uploading your file.", "error", "user");
             }
             else
-            $this->addMessage("Only png, jpg, jpeg and gif are allowed, the image given was regognised as \"".$imageFileType."\".", "error", "user");
+            \Core\Logger::AddMessage("Only png, jpg, jpeg and gif are allowed, the image given was regognised as \"".$imageFileType."\".", "error", "user");
           }
           else
-          $this->addMessage("File is too large, max file size is ".$_FILES[$field]["size"]." and product size is ".$format["max_size"].".", "error", "user");
+          \Core\Logger::AddMessage("File is too large, max file size is ".$_FILES[$field]["size"]." and product size is ".$format["max_size"].".", "error", "user");
         }
         else
-          $this->addMessage("File is not an image.", "error", "user");
+          \Core\Logger::AddMessage("File is not an image.", "error", "user");
       }else{
-        $this->addMessage("Image not submitted.", "error", "user");
+        \Core\Logger::AddMessage("Image not submitted.", "error", "user");
       }
 
       return false;

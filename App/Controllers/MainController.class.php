@@ -19,7 +19,7 @@ class MainController extends AppController{
 
   /* Execute form page */
   protected function executeFormtest($params = null){
-    $fv = new \Core\FormValidator($this->_logger);
+    $fv = new \Core\FormValidator();
 
     $fields_format = ["test_form_min" => [ "min" => 3 ],
                       "test_form_max" => [ "max" => 4 ],
@@ -36,14 +36,14 @@ class MainController extends AppController{
                       "test_daterange" => ["date" => ["format" => "Y-m-d", "after" => "2016-07-15", "before" => "2017-11-15"]]
                       ];
     if(!$fv->formSubmitted())
-      $this->addMessage("Form not sumbitted", "info", "user");
+      \Core\Logger::AddMessage("Form not sumbitted", "info", "user");
 
     if($fv->formSubmitted() && $fv->checkFieldsFormat($fields_format))
-      $this->addMessage("Form content ok", "success", "user");
+      \Core\Logger::AddMessage("Form content ok", "success", "user");
 
     \Core\Template::setStatic("title", "Form test");
     //send logger messages to view
-    \Core\Template::setStatic("messages", $this->getMessages());
+    \Core\Template::setStatic("messages", \Core\Logger::getMessages());
     \Core\Template::setStatic("messages_html", \Core\Template::render("partials/messages.html"));
 
     //set fields content
