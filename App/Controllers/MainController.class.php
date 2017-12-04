@@ -26,20 +26,22 @@ class MainController extends AppController{
                       "test_form_min_max" => [  "min" => 3, "max" => 6 ],
                       "test_optionnal" => [  "optionnal" => true, "min" => 3 ],
                       "test_exact_size" => [ "size" => 2],
-                      "test_optionnalif" => [ "optionnalif" => ["test_exact_size" => ["US"]], "size" => 5],
+                      "test_optionnalif" => [ "optionnalif" => ["test_exact_size" => ["US", "FR"]], "size" => 5],
                       "test_alpha" => ["alpha" => true],
                       "test_alphanum" => ["alphanum" => true],
                       "test_numeric" => ["numeric" => true],
                       "test_int" => ["int" => true],
                       "test_secure" => ["minuppercases" => 2, "mindigits" => 3,  "Maxnbspaces" => 0],
                       "test_date" => ["date" => ["format" => "Y/m/d"]],
-                      "test_daterange" => ["date" => ["format" => "Y-m-d", "after" => "2016-07-15", "before" => "2017-11-15"]]
+                      "test_daterange" => ["date" => ["format" => "Y-m-d", "after" => "2016-07-15", "before" => "2017-11-15"]],
+                      "test_hexcolor" => ["hexcolor" => true, "user_message" => "wrong hexa color"],
+                      "test_inlist" => ["inlist" => ["blue", "red"]]
                       ];
-    if(!$fv->formSubmitted())
-      \Core\Logger::AddMessage("Form not sumbitted", "info", "user");
 
     if($fv->formSubmitted() && $fv->checkFieldsFormat($fields_format))
-      \Core\Logger::AddMessage("Form content ok", "success", "user");
+      \Core\Logger::AddMessage("form is ok", "success", "user");
+    else
+      \Core\Logger::AddMessage("please check fields");
 
     \Core\Template::setStatic("title", "Form test");
     //send logger messages to view
@@ -60,6 +62,9 @@ class MainController extends AppController{
     \Core\Template::setStatic("test_secure", $fv->getFieldValueSecure("test_secure", ""));
     \Core\Template::setStatic("test_date", $fv->getFieldValueSecure("test_date", ""));
     \Core\Template::setStatic("test_daterange", $fv->getFieldValueSecure("test_daterange", ""));
+    \Core\Template::setStatic("test_hexcolor", $fv->getFieldValueSecure("test_hexcolor", ""));
+    \Core\Template::setStatic("test_hexcolor", $fv->getFieldValueSecure("test_hexcolor", ""));
+    \Core\Template::setStatic("test_inlist", $fv->getFieldValueSecure("test_inlist", ""));
 
     //render in template
     \Core\Template::setStatic("content", \Core\Template::render("pages/main/form_test.html"));

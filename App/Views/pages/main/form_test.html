@@ -22,7 +22,7 @@
   <input type="text" name="test_exact_size" value="<?php echo $test_exact_size; ?>"/>
 </div>
 <div class="form_row">
-  <label>Optionnal if coutry code != "US", else size must be 5</label>
+  <label>Optionnal if coutry code != "US" and != "FR", else size must be 5</label>
   <input type="text" name="test_optionnalif" value="<?php echo $test_optionnalif; ?>"/>
 </div>
 
@@ -55,6 +55,16 @@
 <div class="form_row">
   <label>Date (format YYYY-MM-DD) between 2016/07/15 and 2017-11-15</label>
   <input type="text" name="test_daterange" value="<?php echo $test_daterange; ?>"/>
+</div>
+
+<div class="form_row">
+  <label>Hex Color (with custom error message)</label>
+  <input type="text" name="test_hexcolor" value="<?php echo $test_hexcolor; ?>"/>
+</div>
+
+<div class="form_row">
+  <label>Type "blue" or "red"</label>
+  <input type="text" name="test_inlist" value="<?php echo $test_inlist; ?>"/>
 </div>
 
 <div class="form_row_center">

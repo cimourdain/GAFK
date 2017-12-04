@@ -365,11 +365,32 @@ Details of available controls in format (casing of control name is irrelevant)
 
 Name | Parameter | Description
 ------------ | ------------- | -------------
+Optionnal | true | Set field as optionnal (checked only if not empty)
+Optionnalif | array [other_field, [values]] | Set field as optionnal if other_field's value is in [values]
+Size | (int) | Check if field length exactly the size value
 Min | (int) | Check if field length is strictly superior to parameter
 Max | (int) | Check if field length is strictly inferior to parameter
+Alpha | true | Check that field is an alpha
+Alphanum | true | Check that field is alphanum
+Numeric | true | Check that field is numeric
+Int | true | Check that field is an int
 Email | true | Check if field has an email format
 Identical | other_field_name | Check if field content is identical to other_field value
-Int | true | Check that field is an int
+minuppercases | (int) | Check if field contains at least (int) number of uppercase letters
+mindigits | (int) | Check if field contains at least (int) number of digits
+Maxnbspaces | (int) | Check if field contains less than (int) number of spaces
+hexcolor | true | Check if field is a valid hex color value
+inlist | [values] | Check if field value is in [values] list
+user_message | (str) | Value of custom message when field is invalid
+Date | Array() | Check if date match format of parameter, see table below
+
+Detail of date format array
+
+key | value | Description
+------------ | ------------- | -------------
+format | str | required date format (mandatory), ex: 'Y-m-d'
+after | date in format 'Y-m-d' | the field date value must be after parameter date
+bofore | date in format 'Y-m-d' | the field date value must be before parameter date
 
 #### Caching
 
