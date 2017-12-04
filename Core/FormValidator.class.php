@@ -224,33 +224,32 @@ class FormValidator{
 
     function isValidDate($date, $format = 'Y-m-d')
     {
-        $d = DateTime::createFromFormat($format, $date);
+        $d = \DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
 
     //function to check date format
-    function checkDate($field, $format)
+    function checkDate($field, $date_format)
     {
-        if(isset($format["format"])){
-          if(isValidDate($this->getFieldValue($field), $format["format"])){
+        if(isset($date_format["format"])){
+          if($this->isValidDate($this->getFieldValue($field), $date_format["format"])){
             //get date
-            $date = DateTime::createFromFormat($this->getFieldValue($field), $format["format"]);
+            $date = new \DateTime($this->getFieldValue($field));
             //remove format from format
-            unset($format["format"]);
-
+            unset($date_format["format"]);
             //parse all checks on date
             $valid = true;
-            foreach($format as $check => $value){
+            foreach($date_format as $check => $value){
               $method = "checkDate".ucfirst(strtolower($check));
-              if(!method_exists($method, $this)){
+              if(!method_exists($this, $method)){
                   $this->addMessage("Impossible to check ".$check." on date.", "error", "dev");
                   $valid = false;
-              }else if (!isValidDate($value)){
+              }else if (!$this->isValidDate($value)){
                 $this->addMessage("Impossible to check date for field ".$field.", format not defined.", "error", "dev");
               }
               else{
-                $date2 = DateTime::createFromFormat($value, 'Y-m-d');
-                if(!$method($date, $date2))
+                $date_comp = new \DateTime($value);
+                if(!$this->$method($date, $date_comp))
                   $valid = false;
               }
             }
@@ -266,17 +265,17 @@ class FormValidator{
 
     //check if date is before a reference date
     protected function checkDateBefore($date_field, $date_comp){
-      if($date_field > $date_comp)
+      if($date_field < $date_comp)
         return true;
-      $this->addMessage("Date have to be before ".$date_comp->format('Y-m-d').".", "error", "user");
+      $this->addMessage($date_field->format('Y-m-d')." have to be before ".$date_comp->format('Y-m-d').".", "error", "user");
       return false;
     }
 
     //check if date is after a reference date
     protected function checkDateAfter($date_field, $date_comp){
-      if($date_field < $date_comp)
+      if($date_field > $date_comp)
         return true;
-      $this->addMessage("Date have to be before ".$date_comp->format('Y-m-d').".", "error", "user");
+      $this->addMessage($date_field->format('Y-m-d')." have to be after ".$date_comp->format('Y-m-d').".", "error", "user");
       return false;
     }
 

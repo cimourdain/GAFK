@@ -32,6 +32,8 @@ class MainController extends AppController{
                       "test_numeric" => ["numeric" => true],
                       "test_int" => ["int" => true],
                       "test_secure" => ["minuppercases" => 2, "mindigits" => 3,  "Maxnbspaces" => 0],
+                      "test_date" => ["date" => ["format" => "Y/m/d"]],
+                      "test_daterange" => ["date" => ["format" => "Y-m-d", "after" => "2016-07-15", "before" => "2017-11-15"]]
                       ];
     if(!$fv->formSubmitted())
       $this->addMessage("Form not sumbitted", "info", "user");
@@ -56,6 +58,8 @@ class MainController extends AppController{
     \Core\Template::setStatic("test_numeric", $fv->getFieldValueSecure("test_numeric", ""));
     \Core\Template::setStatic("test_int", $fv->getFieldValueSecure("test_int", ""));
     \Core\Template::setStatic("test_secure", $fv->getFieldValueSecure("test_secure", ""));
+    \Core\Template::setStatic("test_date", $fv->getFieldValueSecure("test_date", ""));
+    \Core\Template::setStatic("test_daterange", $fv->getFieldValueSecure("test_daterange", ""));
 
     //render in template
     \Core\Template::setStatic("content", \Core\Template::render("pages/main/form_test.html"));
