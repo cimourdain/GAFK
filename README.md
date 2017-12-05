@@ -350,7 +350,7 @@ Usage example in a controller method to check a login and a password field:
 <?php
 
 //format login and password keys are the fields name in $_POST
-$fields_format = ["login" => ["min" => 3, "max" => 10], "login" => ["min" => 8, "max" => 16]];
+$fields_format = ["login" => ["min" => 3, "max" => 10], "password" => ["min" => 8, "max" => 16]];
 
 //instaciate a new controller
 $fv = new \Core\FormValidator();
