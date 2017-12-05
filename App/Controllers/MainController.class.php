@@ -14,7 +14,7 @@ class MainController extends AppController{
   protected function executePage2($params = null){
     \Core\Template::setStatic("title", "Second page");
     \Core\Template::setStatic("param_val", $this->_params[0]);
-    \Core\Template::setStatic("content", \Core\Template::render("pages/main/page2.html"));
+    \Core\Template::setStatic("content", \Core\Template::render("pages/main/page_2.html"));
   }
 
   /* Execute form page */
