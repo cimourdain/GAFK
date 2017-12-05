@@ -4,7 +4,7 @@ namespace App;
 
 class Config{
     const WEBSITE_ADDRESS = 'http://localhost/';
-    const SCRIPT_FOLDER = 'rendu/GAFK/';
+    const SCRIPT_FOLDER = 'GAFK/';
     const BASE_URL = self::WEBSITE_ADDRESS.self::SCRIPT_FOLDER;
     const TIMEZONE = 'Europe/Paris';
 
